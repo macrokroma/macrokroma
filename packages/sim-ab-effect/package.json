@@ -1,0 +1,33 @@
+{
+  "name": "@macrokroma/sim-ab-effect",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "echo 'lint not yet configured'",
+    "clean": "rm -rf dist node_modules/.cache"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.5.0",
+    "three": "^0.174.0",
+    "@react-three/fiber": "^9.6.0",
+    "@react-three/drei": "^9.122.0",
+    "zustand": "^5.0.0",
+    "@macrokroma/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/three": "^0.174.0",
+    "typescript": "^5.7.0"
+  }
+}

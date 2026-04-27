@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@source "../../shared/src/**/*.{ts,tsx}";
+@source "../../sim-ab-effect/src/**/*.{ts,tsx}";
+/*
+ * CSS custom properties for theming.
+ * All simulation suites and the site shell share these tokens.
+ * Dark theme by default — physics simulations look best on dark backgrounds.
+ */
+:root {
+  --color-bg: #0a0a0f;
+  --color-surface: #12121a;
+  --color-surface-raised: #1a1a26;
+  --color-border: #2a2a3a;
+  --color-text-primary: #e8e8ef;
+  --color-text-secondary: #8888a0;
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* Typography scale */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-serif: "Newsreader", "Georgia", serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure R3F canvases fill their containers */
+.r3f-canvas-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.r3f-canvas-container canvas {
+  display: block;
+}

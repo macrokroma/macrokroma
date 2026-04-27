@@ -1,0 +1,23 @@
+# Normalize all text files to LF in the repo, check out as OS-native
+* text=auto eol=lf
+
+# Ensure these are always treated as text
+*.ts text
+*.tsx text
+*.js text
+*.jsx text
+*.json text
+*.md text
+*.yaml text
+*.yml text
+*.css text
+*.html text
+
+# Ensure these are always treated as binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.glb binary
+*.gltf binary

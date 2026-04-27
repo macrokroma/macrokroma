@@ -1,0 +1,34 @@
+{
+  "name": "@macrokroma/site-shell",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "lint": "echo 'lint not yet configured'",
+    "clean": "rm -rf dist node_modules/.cache"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.5.0",
+    "three": "^0.174.0",
+    "@react-three/fiber": "^9.6.0",
+    "@react-three/drei": "^9.122.0",
+    "@macrokroma/shared": "workspace:*",
+    "@macrokroma/sim-ab-effect": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/three": "^0.174.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.3.0",
+    "tailwindcss": "^4.1.0",
+    "@tailwindcss/vite": "^4.1.0"
+  }
+}

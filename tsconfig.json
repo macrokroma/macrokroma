@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    /* Language & Emit */
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Interop */
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    /* Emit — packages handle their own emit via Vite */
+    "noEmit": true,
+
+    /* Path aliases — each package can override */
+    "baseUrl": ".",
+    "paths": {}
+  },
+  "exclude": ["node_modules", "dist"]
+}
