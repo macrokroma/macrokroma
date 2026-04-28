@@ -2,5 +2,6 @@ export { ABEffectEntry } from "./ABEffectEntry";
 export { ABOverview } from "./views/ABOverview";
 export { ABInterference } from "./views/ABInterference";
 export { ABDoubleSlit } from "./views/ABDoubleSlit";
+export { ABVectorPotential } from "./views/ABVectorPotential";
 export { useABStore } from "./store/abStore";
 export type { ABParams } from "./store/abStore";

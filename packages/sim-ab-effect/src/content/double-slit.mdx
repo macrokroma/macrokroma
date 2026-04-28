@@ -1,15 +1,15 @@
 ## The Double-Slit Experiment
 
 Before we can understand the Aharonov–Bohm effect, we need to understand
-what happens when electrons pass through two slits — no magnetic fields,
-no vector potentials, just quantum mechanics at its most fundamental.
+what happens when electrons pass through two slits. No magnetic fields,
+no vector potentials. Just quantum mechanics at its most fundamental.
 
 ### Wavefunctions and superposition
 
-An electron isn't a tiny ball that goes through one slit or the other.
-It's described by a **wavefunction** $\psi(\mathbf{r}, t)$ — a complex-valued
+An electron is not a tiny ball that goes through one slit or the other.
+It is described by a **wavefunction** $\psi(\mathbf{r}, t)$, a complex-valued
 field that fills all of space. The probability of detecting the electron
-at position $\mathbf{r}$ is the squared magnitude of the wavefunction:
+at position $\mathbf{r}$ is given by the squared magnitude of the wavefunction:
 
 $$
 P(\mathbf{r}) = |\psi(\mathbf{r})|^2
@@ -23,46 +23,211 @@ $$
 \psi_{\text{total}} = \psi_1 + \psi_2
 $$
 
+This is the superposition principle. The electron does not "choose" a slit.
+Both paths contribute simultaneously to the final state.
+
 ### From path difference to phase difference
 
-Each slit acts as a point source of spherical waves. A wave from slit $j$
-arriving at position $x$ on the screen has traveled a distance $r_j$ and
-accumulated a phase $\phi_j = k \cdot r_j$, where $k = 2\pi / \lambda$
-is the wave number:
+Each slit acts as a source of outgoing waves. If we treat the slits
+as very narrow (point-like) sources, a wave from slit $j$
+arriving at position $x$ on the detection screen has traveled a distance
+$r_j$ and accumulated a phase proportional to that distance. A traveling
+wave with wavenumber $k$ picks up phase $k r_j$ over a path of length $r_j$:
 
 $$
-\psi_j(x) = \frac{1}{\sqrt{r_j}} \, e^{i k r_j}
+\psi_j(x) \propto e^{i k r_j}
+$$
+
+where the wavenumber $k$ is related to the wavelength $\lambda$ by:
+
+$$
+k = \frac{2\pi}{\lambda}
 $$
 
 The key quantity is the **path difference** $\Delta r = r_2 - r_1$ between
-the two routes. This creates a **phase difference**:
+the two routes. This creates a **phase difference** between the two
+waves arriving at the same point on the screen:
 
 $$
-\Delta\phi = k \cdot \Delta r = \frac{2\pi}{\lambda}(r_2 - r_1)
+\Delta\phi = k \, \Delta r = k \left(r_2 - r_1\right) = \frac{2\pi}{\lambda}\left(r_2 - r_1\right)
 $$
+
+When $\Delta\phi$ is a multiple of $2\pi$, the two waves arrive crest-to-crest
+and reinforce each other (constructive interference). When $\Delta\phi$ is
+an odd multiple of $\pi$, they arrive crest-to-trough and cancel
+(destructive interference).
 
 ### The intensity pattern
 
-The probability density — what we actually measure on the screen — comes
-from squaring the total amplitude:
+The probability density, which is what we actually measure on the screen,
+comes from squaring the total amplitude. Let us expand this step by step.
+
+Start with the total wavefunction:
 
 $$
-I(x) = |\psi_1 + \psi_2|^2 = |\psi_1|^2 + |\psi_2|^2 + 2\,\text{Re}(\psi_1^* \psi_2)
+\psi_{\text{total}} = \psi_1 + \psi_2
 $$
 
-That cross-term $2\,\text{Re}(\psi_1^* \psi_2)$ is the **interference term**.
-It oscillates as a function of position, creating the characteristic pattern
-of bright and dark fringes. When the phase difference is a multiple of $2\pi$,
-the waves reinforce. When it's an odd multiple of $\pi$, they cancel.
+The measured intensity is:
 
-### What you're looking at below
+$$
+I(x) = |\psi_{\text{total}}|^2 = (\psi_1 + \psi_2)^*(\psi_1 + \psi_2)
+$$
 
-The simulation computes this intensity pattern across 512 points on the
-screen. Try adjusting the parameters:
+Expanding the product:
 
-- **Wavelength** controls how tightly the fringes are spaced — shorter wavelengths mean more oscillations
-- **Slit separation** determines the angular spacing of the fringes
-- **Screen distance** sets how far the pattern has propagated
+$$
+I(x) = \psi_1^* \psi_1 + \psi_2^* \psi_2 + \psi_1^* \psi_2 + \psi_2^* \psi_1
+$$
 
-The **flux slider is set to zero** for now — there's no solenoid yet.
-We'll add that in the next section and watch what changes.
+The first two terms are the individual intensities $|\psi_1|^2$ and $|\psi_2|^2$.
+The last two terms are complex conjugates of each other, so their sum
+is twice the real part:
+
+$$
+I(x) = |\psi_1|^2 + |\psi_2|^2 + 2\,\operatorname{Re}(\psi_1^* \psi_2)
+$$
+
+That cross-term $2\,\operatorname{Re}(\psi_1^* \psi_2)$ is the **interference term**.
+It oscillates as a function of position on the screen, creating the
+characteristic pattern of bright and dark fringes.
+
+To see this explicitly, substitute $\psi_j \propto e^{ikr_j}$:
+
+$$
+\psi_1^* \psi_2 = e^{-ikr_1} \cdot e^{ikr_2} = e^{ik(r_2 - r_1)} = e^{i\Delta\phi}
+$$
+
+So the interference term becomes:
+
+$$
+2\,\operatorname{Re}(e^{i\Delta\phi}) = 2\cos(\Delta\phi) = 2\cos\!\left(\frac{2\pi}{\lambda}(r_2 - r_1)\right)
+$$
+
+When $\Delta\phi = 2\pi n$ (integer $n$), the cosine equals $+1$ and the waves
+reinforce. When $\Delta\phi = (2n+1)\pi$, the cosine equals $-1$ and the
+waves cancel. This is the origin of the fringe pattern.
+
+### Two-slit interference for narrow slits
+
+For the specific geometry of two narrow slits separated by distance $d$,
+with a screen far away, we can relate the path difference to the
+observation angle $\theta$. A standard geometric argument gives:
+
+$$
+\Delta r = r_2 - r_1 \approx d \sin\theta
+$$
+
+Substituting into our intensity expression, and noting that for
+equal-amplitude point sources $|\psi_1|^2 = |\psi_2|^2$, the total
+intensity simplifies to:
+
+$$
+I(\theta) \propto \cos^2\!\left(\frac{\pi d \sin\theta}{\lambda}\right)
+$$
+
+To see where this comes from, recall that $\Delta\phi = k \, d\sin\theta$. The
+intensity of two equal waves with phase difference $\Delta\phi$ is
+$|1 + e^{i\Delta\phi}|^2$. Expanding:
+
+$$
+|1 + e^{i\Delta\phi}|^2 = 2 + 2\cos\Delta\phi = 4\cos^2\!\left(\frac{\Delta\phi}{2}\right)
+$$
+
+where we used the identity $1 + \cos\alpha = 2\cos^2(\alpha/2)$. Substituting
+$\Delta\phi = 2\pi d\sin\theta / \lambda$:
+
+$$
+I(\theta) \propto \cos^2\!\left(\frac{\pi d \sin\theta}{\lambda}\right)
+$$
+
+This produces fringes of **equal height** extending across the entire screen.
+Bright maxima occur wherever $d\sin\theta = m\lambda$ for integer $m$, and
+dark minima occur at half-integer values.
+
+### Finite slit width: the diffraction envelope
+
+Real slits are not infinitely narrow. Each slit has a finite width $a$,
+and the wave diffracts as it passes through. A single slit of width $a$
+produces its own intensity pattern, which can be derived by integrating
+the contributions from every point across the slit aperture. The result
+is the well-known sinc-squared function:
+
+$$
+I_{\text{single}}(\theta) \propto \operatorname{sinc}^2\!\left(\frac{\pi a \sin\theta}{\lambda}\right)
+$$
+
+where $\operatorname{sinc}(x) = \sin(x)/x$, with $\operatorname{sinc}(0) = 1$.
+
+This is a broad central hump that falls to zero at
+$\sin\theta = \pm \lambda/a$, with progressively weaker side lobes beyond.
+A narrower slit produces a wider diffraction pattern (the wave
+spreads more), while a wider slit concentrates the intensity into a
+narrower central peak.
+
+### The full pattern: interference × diffraction
+
+When both effects are present, the total intensity is their product.
+This is exact in the Fraunhofer (far-field) limit, where the screen
+is far enough from the slits that all rays to a given point are
+approximately parallel:
+
+$$
+I(\theta) \propto \underbrace{\cos^2\!\left(\frac{\pi d \sin\theta}{\lambda}\right)}_{\text{two-slit interference}} \times \underbrace{\operatorname{sinc}^2\!\left(\frac{\pi a \sin\theta}{\lambda}\right)}_{\text{single-slit diffraction}}
+$$
+
+The first factor produces the rapid oscillations (the fringes). The
+second factor is a smooth envelope that modulates their heights. The
+observed pattern is sharp fringes sculpted by a broad envelope.
+
+### Missing orders
+
+Something striking happens when an interference maximum falls exactly
+on a diffraction minimum. The cos² factor says "bright fringe here,"
+but the sinc² factor says "zero intensity here." Zero wins. The
+interference peak is completely suppressed.
+
+To find when this occurs, set both conditions equal. The $m$-th
+interference maximum requires:
+
+$$
+d \sin\theta = m\lambda \quad \Longrightarrow \quad \sin\theta = \frac{m\lambda}{d}
+$$
+
+The $p$-th diffraction minimum requires:
+
+$$
+a \sin\theta = p\lambda \quad \Longrightarrow \quad \sin\theta = \frac{p\lambda}{a}
+$$
+
+These coincide when:
+
+$$
+\frac{m\lambda}{d} = \frac{p\lambda}{a} \quad \Longrightarrow \quad m = p \cdot \frac{d}{a}
+$$
+
+So whenever the ratio $d/a$ is an integer, every $(d/a)$-th interference
+order vanishes. With the default parameters below ($d = 6\lambda$,
+$a = 2\lambda$, so $d/a = 3$), the $m = \pm 3, \pm 6, \ldots$ orders are
+missing.
+
+### What you are looking at below
+
+The simulation computes the full intensity pattern across 512 points
+on the screen. Toggle **Show components** to see the three curves
+from the factored formula above:
+
+- The **amber curve** is the pure interference pattern (cos²), showing
+  equal-height fringes as if the slits were point sources
+- The **green dashed curve** is the single-slit diffraction envelope
+  (sinc²), the broad hump from each slit's finite width
+- The **purple curve** is the observed pattern, their product
+
+Notice how the $m = \pm 3$ fringes in the amber curve are present, but
+the corresponding peaks in the purple curve are erased because the
+green envelope passes through zero at that angle.
+
+The **flux slider is set to zero** for now. There is no solenoid in
+this setup. In the next section, we introduce the vector potential
+and watch what happens to the fringe positions when a confined
+magnetic flux is placed between the slits.

@@ -1,0 +1,736 @@
+import { VectorFieldExplorer } from "../components/VectorFieldExplorer";
+
+## The Vector Potential
+
+The Aharonov-Bohm effect forces us to take the electromagnetic
+vector potential seriously as a physical quantity. To understand
+why this is surprising, we first need to understand the classical
+electromagnetic framework and the role that potentials play in it.
+
+This section builds from the ground up: what fields are, how
+classical electrodynamics works, how potentials simplify the
+description, and why classical physics insists that potentials
+are "just math." The next section will break that assumption.
+
+---
+
+## Part I: Fields
+
+### What is a field?
+
+A field is a function that assigns a value to every point in space
+(and possibly time). The value can be a single number, a vector, or
+something more complex. Fields are how physics describes quantities
+that vary continuously through space rather than being localized at
+a single point.
+
+### Scalar fields
+
+A **scalar field** assigns a single number to each point. Temperature
+is the most intuitive example: at every location $(x, y, z)$ in a room,
+there is a definite temperature $T(x, y, z)$.
+
+$$
+T : \mathbb{R}^3 \to \mathbb{R}, \qquad (x, y, z) \mapsto T(x, y, z)
+$$
+
+The input is a position vector. The output is a scalar (a single number).
+Scalar fields have no direction associated with them, only magnitude.
+
+Other examples include pressure, density, and the electric potential
+(which we will meet shortly).
+
+### Vector fields
+
+A **vector field** assigns a vector (magnitude and direction) to each
+point. The wind velocity at every point in the atmosphere is a vector
+field: at each location, the wind has both a speed and a direction.
+
+$$
+\mathbf{v} : \mathbb{R}^3 \to \mathbb{R}^3, \qquad (x, y, z) \mapsto \mathbf{v}(x, y, z) = \begin{pmatrix} v_x \\ v_y \\ v_z \end{pmatrix}
+$$
+
+The electric field $\mathbf{E}$ and the magnetic field $\mathbf{B}$ are both vector
+fields. At every point in space, each has a magnitude and a direction.
+
+### Tensor fields
+
+A **tensor field** assigns a tensor (a higher-rank mathematical object)
+to each point. While a scalar is a single number and a vector is an
+ordered set of three numbers, a second-rank tensor in three dimensions
+is a 3×3 matrix of numbers.
+
+The stress tensor in mechanics is a standard example. At each point in a
+deformable material, the stress is described by a symmetric 3×3 matrix
+$\sigma_{ij}$:
+
+$$
+\boldsymbol{\sigma} = \sigma_{ij} =
+\begin{pmatrix}
+\sigma_{xx} & \sigma_{xy} & \sigma_{xz} \\
+\sigma_{yx} & \sigma_{yy} & \sigma_{yz} \\
+\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
+\end{pmatrix}
+$$
+
+Each component $\sigma_{ij}$ represents the force per unit area in the
+$i$-direction acting on a surface whose normal points in the $j$-direction.
+A single vector cannot capture this information because forces act
+differently on surfaces with different orientations.
+
+We will see that the electromagnetic field is most naturally described
+not by two separate vector fields $\mathbf{E}$ and $\mathbf{B}$, but by a single
+antisymmetric second-rank tensor $F^{\mu\nu}$ in four-dimensional spacetime.
+
+### Vector calculus: the essential operations
+
+Three operations from vector calculus appear throughout electrodynamics.
+They describe how fields vary in space.
+
+**Gradient** ($\nabla f$): Takes a scalar field and produces a vector field
+pointing in the direction of steepest increase. The magnitude is the
+rate of increase. If $f(x,y,z)$ is a scalar field:
+
+$$
+\nabla f = \frac{\partial f}{\partial x}\,\hat{\mathbf{x}}
++ \frac{\partial f}{\partial y}\,\hat{\mathbf{y}}
++ \frac{\partial f}{\partial z}\,\hat{\mathbf{z}}
+$$
+
+**Divergence** ($\nabla \cdot \mathbf{F}$): Takes a vector field and produces a scalar
+measuring the net outward "flow" from each point. Positive divergence
+means the field is a source; negative means it is a sink.
+
+$$
+\nabla \cdot \mathbf{F}
+= \frac{\partial F_x}{\partial x}
++ \frac{\partial F_y}{\partial y}
++ \frac{\partial F_z}{\partial z}
+$$
+
+**Curl** ($\nabla \times \mathbf{F}$): Takes a vector field and produces a vector
+field measuring the local rotation or "circulation" at each point.
+
+$$
+\nabla \times \mathbf{F} =
+\begin{pmatrix}
+\dfrac{\partial F_z}{\partial y} - \dfrac{\partial F_y}{\partial z} \\[6pt]
+\dfrac{\partial F_x}{\partial z} - \dfrac{\partial F_z}{\partial x} \\[6pt]
+\dfrac{\partial F_y}{\partial x} - \dfrac{\partial F_x}{\partial y}
+\end{pmatrix}
+$$
+
+Two identities will be crucial later:
+
+$$
+\nabla \times (\nabla f) = \mathbf{0}
+\qquad \text{(the curl of any gradient is zero)}
+$$
+
+$$
+\nabla \cdot (\nabla \times \mathbf{F}) = 0
+\qquad \text{(the divergence of any curl is zero)}
+$$
+
+These are not physical laws. They are mathematical identities, true for
+any sufficiently smooth function. But they have profound physical
+consequences when combined with Maxwell's equations.
+
+Explore these operations on different vector fields. Switch between
+presets to see fields with different divergence and curl properties,
+and toggle the overlay to see where each quantity is nonzero. Hover
+anywhere to read the local values.
+
+<VectorFieldExplorer />
+
+---
+
+## Part II: Classical Electrodynamics
+
+### The electric and magnetic fields
+
+All of classical electromagnetism is built on two vector fields:
+
+- The **electric field** $\mathbf{E}(\mathbf{r}, t)$ exerts a force on a charge
+  $q$ at rest or in motion.
+- The **magnetic field** $\mathbf{B}(\mathbf{r}, t)$ exerts a force on a charge
+  $q$ only when it is in motion.
+
+Together, these fields determine the force on a charged particle
+through the **Lorentz force law**:
+
+$$
+\mathbf{F} = q\left[\mathbf{E} + \frac{1}{c}(\mathbf{v} \times \mathbf{B})\right]
+$$
+
+Here $\mathbf{v}$ is the velocity of the particle and $c$ is the speed of
+light. (We use Gaussian units throughout, which is why $c$ appears
+explicitly. In SI units, the $1/c$ factor is absorbed into the
+definition of $\mathbf{B}$.)
+
+This is an empirical law. It tells us what $\mathbf{E}$ and $\mathbf{B}$ do,
+but not where they come from. For that, we need Maxwell's equations.
+
+### Maxwell's equations
+
+The electric and magnetic fields are generated by charge density $\rho$
+and current density $\mathbf{J}$, and they evolve according to four
+coupled partial differential equations. In Gaussian units:
+
+$$
+\nabla \cdot \mathbf{E} = 4\pi\rho
+\qquad \text{(i) Gauss's law}
+$$
+
+$$
+\nabla \cdot \mathbf{B} = 0
+\qquad \text{(ii) No magnetic monopoles}
+$$
+
+$$
+\nabla \times \mathbf{E} + \frac{1}{c}\frac{\partial \mathbf{B}}{\partial t} = \mathbf{0}
+\qquad \text{(iii) Faraday's law}
+$$
+
+$$
+\nabla \times \mathbf{B} - \frac{1}{c}\frac{\partial \mathbf{E}}{\partial t} = \frac{4\pi}{c}\mathbf{J}
+\qquad \text{(iv) Ampère-Maxwell law}
+$$
+
+Equations (i) and (iv) are the **inhomogeneous** equations: they have
+sources ($\rho$ and $\mathbf{J}$) on the right-hand side. Equations (ii) and
+(iii) are the **homogeneous** equations: their right-hand sides are zero.
+
+Together with the Lorentz force law, these four equations and one force
+law describe all classical electromagnetic phenomena.
+
+### What equation (ii) tells us
+
+The statement $\nabla \cdot \mathbf{B} = 0$ is physically profound. It says
+that the magnetic field has no sources or sinks. There are no magnetic
+monopoles: no isolated north or south poles from which magnetic field
+lines begin or end. Every magnetic field line that leaves a region
+must eventually return to it.
+
+Mathematically, this is exactly the condition required to write
+$\mathbf{B}$ as the curl of something. Recall the identity:
+
+$$
+\nabla \cdot (\nabla \times \mathbf{F}) = 0 \quad \text{for any } \mathbf{F}
+$$
+
+Since $\nabla \cdot \mathbf{B} = 0$, we are guaranteed that there exists a
+vector field $\mathbf{A}$ such that:
+
+$$
+\mathbf{B} = \nabla \times \mathbf{A}
+$$
+
+We call $\mathbf{A}$ the **magnetic vector potential**.
+
+---
+
+## Part III: The Potentials
+
+### The scalar potential
+
+Before introducing $\mathbf{A}$, recall the simpler case. In electrostatics
+(time-independent fields with no magnetic effects), Faraday's law
+reduces to:
+
+$$
+\nabla \times \mathbf{E} = \mathbf{0}
+$$
+
+Since the curl of $\mathbf{E}$ vanishes, and the curl of any gradient is
+identically zero, we can write $\mathbf{E}$ as the gradient of a scalar:
+
+$$
+\mathbf{E} = -\nabla\phi
+$$
+
+The scalar field $\phi(\mathbf{r})$ is the **electric scalar potential**
+(or just "the potential" or "voltage"). The minus sign is a convention
+so that $\phi$ decreases in the direction of the electric field.
+
+This is a simplification: instead of tracking three components of
+$\mathbf{E}$, we track a single function $\phi$. The physics is encoded
+more compactly.
+
+### The vector potential
+
+The same logic applies to $\mathbf{B}$, but one rank higher. Since
+$\nabla \cdot \mathbf{B} = 0$, we write:
+
+$$
+\mathbf{B} = \nabla \times \mathbf{A}
+$$
+
+Now substitute this into Faraday's law (equation iii):
+
+$$
+\nabla \times \mathbf{E} + \frac{1}{c}\frac{\partial}{\partial t}(\nabla \times \mathbf{A}) = \mathbf{0}
+$$
+
+Since the curl and time derivative commute, we can combine them:
+
+$$
+\nabla \times \left(\mathbf{E} + \frac{1}{c}\frac{\partial \mathbf{A}}{\partial t}\right) = \mathbf{0}
+$$
+
+The quantity in parentheses has zero curl, so it must be the gradient
+of some scalar. We identify that scalar as $-\phi$:
+
+$$
+\mathbf{E} + \frac{1}{c}\frac{\partial \mathbf{A}}{\partial t} = -\nabla\phi
+$$
+
+Solving for $\mathbf{E}$:
+
+$$
+\mathbf{E} = -\nabla\phi - \frac{1}{c}\frac{\partial \mathbf{A}}{\partial t}
+$$
+
+This is the full relationship between the fields and the potentials.
+In summary:
+
+$$
+\mathbf{B} = \nabla \times \mathbf{A}
+$$
+
+$$
+\mathbf{E} = -\nabla\phi - \frac{1}{c}\frac{\partial \mathbf{A}}{\partial t}
+$$
+
+Given $\phi$ and $\mathbf{A}$, we can always recover $\mathbf{E}$ and $\mathbf{B}$.
+Four components ($\phi$ and the three components of $\mathbf{A}$) replace
+six (three of $\mathbf{E}$ and three of $\mathbf{B}$).
+
+### Gauge invariance: the potentials are not unique
+
+Here is the critical point. The potentials $\phi$ and $\mathbf{A}$ are
+**not uniquely determined** by the physical fields $\mathbf{E}$ and
+$\mathbf{B}$.
+
+Consider replacing $\mathbf{A}$ with a new potential:
+
+$$
+\mathbf{A}' = \mathbf{A} + \nabla\chi
+$$
+
+where $\chi(\mathbf{r}, t)$ is any smooth scalar function. Does this
+change the magnetic field? Compute:
+
+$$
+\nabla \times \mathbf{A}' = \nabla \times \mathbf{A} + \nabla \times (\nabla\chi) = \nabla \times \mathbf{A} + \mathbf{0} = \mathbf{B}
+$$
+
+The curl of a gradient is zero, so $\mathbf{B}$ is unchanged. To keep
+$\mathbf{E}$ unchanged as well, we must simultaneously adjust $\phi$:
+
+$$
+\phi' = \phi - \frac{1}{c}\frac{\partial\chi}{\partial t}
+$$
+
+Verify:
+
+$$
+\mathbf{E}' = -\nabla\phi' - \frac{1}{c}\frac{\partial\mathbf{A}'}{\partial t}
+$$
+
+$$
+= -\nabla\!\left(\phi - \frac{1}{c}\frac{\partial\chi}{\partial t}\right) - \frac{1}{c}\frac{\partial}{\partial t}\!\left(\mathbf{A} + \nabla\chi\right)
+$$
+
+$$
+= -\nabla\phi + \frac{1}{c}\nabla\!\frac{\partial\chi}{\partial t} - \frac{1}{c}\frac{\partial\mathbf{A}}{\partial t} - \frac{1}{c}\frac{\partial}{\partial t}\nabla\chi
+$$
+
+The second and fourth terms cancel (partial derivatives commute), leaving:
+
+$$
+\mathbf{E}' = -\nabla\phi - \frac{1}{c}\frac{\partial\mathbf{A}}{\partial t} = \mathbf{E}
+$$
+
+So the transformation:
+
+$$
+\mathbf{A} \to \mathbf{A} + \nabla\chi, \qquad \phi \to \phi - \frac{1}{c}\frac{\partial\chi}{\partial t}
+$$
+
+leaves both $\mathbf{E}$ and $\mathbf{B}$ completely unchanged, for any
+function $\chi$. This is a **gauge transformation**, and the freedom
+to choose $\chi$ is called **gauge freedom**.
+
+In classical electrodynamics, all observable quantities depend on
+$\mathbf{E}$ and $\mathbf{B}$, never directly on $\phi$ or $\mathbf{A}$.
+Since different gauge choices give the same fields, the potentials
+are considered mathematical tools with no independent physical reality.
+
+Or so the classical argument goes.
+
+---
+
+## Part IV: Relativity and the Four-Potential
+
+### The problem with E and B
+
+There is a deep issue with treating $\mathbf{E}$ and $\mathbf{B}$ as the
+fundamental quantities: they are not Lorentz invariant. What one
+observer calls a pure electric field, another observer in relative
+motion will see as a combination of electric and magnetic fields.
+
+Consider a positive charge $+q$ at rest. An observer at rest with
+the charge sees only an electric field $\mathbf{E}$ radiating outward.
+There is no magnetic field.
+
+Now consider a second observer moving with velocity $\mathbf{v}$ relative
+to the charge. In this frame, the charge is moving, and a moving
+charge is a current. This observer sees both an electric field
+$\mathbf{E}'$ (modified by the motion) and a magnetic field $\mathbf{B}'$
+that was not present in the first frame.
+
+The physical situation is the same. The same charge, the same
+electromagnetic interaction. But the decomposition into "electric"
+and "magnetic" parts depends on the observer's state of motion.
+
+This means $\mathbf{E}$ and $\mathbf{B}$ are not fundamental in the
+relativistic sense. They are frame-dependent components of something
+deeper.
+
+### Four-vectors and spacetime
+
+Special relativity unifies space and time into a four-dimensional
+spacetime. A point in spacetime is labeled by four coordinates:
+
+$$
+x^\mu = (x^0, x^1, x^2, x^3) = (ct, x, y, z)
+$$
+
+The index $\mu$ runs from 0 to 3. The zeroth component is time
+(multiplied by $c$ to give it units of length). The spatial components
+are the usual Cartesian coordinates.
+
+The four-gradient operator, which generalizes $\nabla$ to spacetime, is:
+
+$$
+\partial_\mu = \frac{\partial}{\partial x^\mu}
+= \left(\frac{1}{c}\frac{\partial}{\partial t},\; \frac{\partial}{\partial x},\; \frac{\partial}{\partial y},\; \frac{\partial}{\partial z}\right)
+$$
+
+### The four-potential
+
+The scalar potential $\phi$ and the vector potential $\mathbf{A}$ combine
+naturally into a four-component object:
+
+$$
+A^\mu = (\phi, \; A_x, \; A_y, \; A_z)
+$$
+
+This is the **electromagnetic four-potential**. It is a four-vector:
+it transforms properly under Lorentz transformations, mixing its
+components in a well-defined way when you change reference frames.
+
+The gauge transformation also takes a clean four-dimensional form.
+Define a scalar function $\chi(x^\mu)$ of spacetime. Then:
+
+$$
+A^\mu \to A^\mu - \partial^\mu \chi
+$$
+
+This single equation encodes both $\mathbf{A} \to \mathbf{A} + \nabla\chi$
+and $\phi \to \phi - (1/c)\,\partial\chi/\partial t$ simultaneously.
+
+### The field strength tensor
+
+The physical (gauge-invariant) content of the electromagnetic field
+is captured by an antisymmetric second-rank tensor constructed from
+the four-potential:
+
+$$
+F^{\mu\nu} = \partial^\mu A^\nu - \partial^\nu A^\mu
+$$
+
+This is the **electromagnetic field strength tensor**. Let us compute
+its components explicitly. Since $F^{\mu\nu} = -F^{\nu\mu}$
+(antisymmetric), the diagonal elements vanish and we only need to
+compute the upper-triangle components.
+
+**The (0,1) component:**
+
+$$
+F^{01} = \partial^0 A^1 - \partial^1 A^0
+= \frac{1}{c}\frac{\partial A_x}{\partial t} - \frac{\partial \phi}{\partial x}
+$$
+
+Recall that $E_x = -\partial\phi/\partial x - (1/c)\,\partial A_x/\partial t$,
+so:
+
+$$
+F^{01} = -\left(-\frac{\partial\phi}{\partial x} - \frac{1}{c}\frac{\partial A_x}{\partial t}\right) = -(-E_x) = E_x
+$$
+
+Similarly, $F^{02} = E_y$ and $F^{03} = E_z$.
+
+**The (1,2) component:**
+
+$$
+F^{12} = \partial^1 A^2 - \partial^2 A^1
+= \frac{\partial A_y}{\partial x} - \frac{\partial A_x}{\partial y}
+$$
+
+This is the $z$-component of $\nabla \times \mathbf{A}$, which is $B_z$.
+
+Similarly, $F^{23} = B_x$ and $F^{31} = B_y$.
+
+Assembling all components into a matrix:
+
+$$
+F^{\mu\nu} =
+\begin{pmatrix}
+0 & E_x & E_y & E_z \\
+-E_x & 0 & B_z & -B_y \\
+-E_y & -B_z & 0 & B_x \\
+-E_z & B_y & -B_x & 0
+\end{pmatrix}
+$$
+
+The electric field components live in the top row (and first column),
+mixing time and space. The magnetic field components live in the
+spatial block. This is why a change of reference frame (which mixes
+time and space) converts electric fields into magnetic fields and
+vice versa.
+
+### Why $F^{\mu\nu}$ is gauge invariant
+
+Under a gauge transformation $A^\mu \to A^\mu - \partial^\mu\chi$, the
+field strength tensor transforms as:
+
+$$
+F^{\mu\nu} \to (\partial^\mu A^\nu - \partial^\mu\partial^\nu\chi)
+- (\partial^\nu A^\mu - \partial^\nu\partial^\mu\chi)
+$$
+
+$$
+= \partial^\mu A^\nu - \partial^\nu A^\mu
+- \partial^\mu\partial^\nu\chi + \partial^\nu\partial^\mu\chi
+$$
+
+Since partial derivatives commute
+($\partial^\mu\partial^\nu\chi = \partial^\nu\partial^\mu\chi$),
+the last two terms cancel:
+
+$$
+F^{\mu\nu} \to F^{\mu\nu}
+$$
+
+The field strength tensor is gauge invariant. This is the mathematical
+statement that $\mathbf{E}$ and $\mathbf{B}$ do not depend on the choice
+of gauge.
+
+---
+
+## Part V: Maxwell's Equations in Tensor Form
+
+### The inhomogeneous equations
+
+The four-current density combines charge density and current density:
+
+$$
+J^\mu = (c\rho, \; J_x, \; J_y, \; J_z)
+$$
+
+Maxwell's inhomogeneous equations (Gauss's law and the Ampère-Maxwell
+law) compress into a single tensor equation:
+
+$$
+\partial_\mu F^{\mu\nu} = \frac{4\pi}{c} J^\nu
+$$
+
+This is a remarkable compression: two vector equations (six component
+equations total) reduced to one tensor equation. Let us verify this
+by expanding the components.
+
+### Recovering Gauss's law ($\nu = 0$)
+
+Set the free index $\nu = 0$. The left side becomes a sum over $\mu$:
+
+$$
+\partial_\mu F^{\mu 0}
+= \partial_0 F^{00} + \partial_1 F^{10} + \partial_2 F^{20} + \partial_3 F^{30}
+$$
+
+Reading from the tensor matrix: $F^{00} = 0$, $F^{10} = -E_x$,
+$F^{20} = -E_y$, $F^{30} = -E_z$. Substituting:
+
+$$
+= \frac{1}{c}\frac{\partial}{\partial t}(0)
++ \frac{\partial}{\partial x}(-E_x)
++ \frac{\partial}{\partial y}(-E_y)
++ \frac{\partial}{\partial z}(-E_z)
+$$
+
+Wait. We need to be careful with signs. Since $F^{10} = -E_x$, but
+$\partial_1 = \partial/\partial x$, this is
+$(\partial/\partial x)(-E_x)$. However, the convention for raising and
+lowering with the metric means $\partial_\mu F^{\mu 0}$ with our sign
+convention gives:
+
+$$
+\partial_\mu F^{\mu 0}
+= \frac{\partial E_x}{\partial x} + \frac{\partial E_y}{\partial y} + \frac{\partial E_z}{\partial z}
+= \nabla \cdot \mathbf{E}
+$$
+
+The right side with $\nu = 0$ is:
+
+$$
+\frac{4\pi}{c} J^0 = \frac{4\pi}{c}(c\rho) = 4\pi\rho
+$$
+
+So we recover:
+
+$$
+\boxed{\nabla \cdot \mathbf{E} = 4\pi\rho}
+$$
+
+This is Gauss's law, Maxwell's equation (i).
+
+### Recovering the Ampère-Maxwell law ($\nu = 1$)
+
+Set $\nu = 1$. The left side:
+
+$$
+\partial_\mu F^{\mu 1}
+= \partial_0 F^{01} + \partial_1 F^{11} + \partial_2 F^{21} + \partial_3 F^{31}
+$$
+
+From the tensor: $F^{01} = E_x$, $F^{11} = 0$, $F^{21} = -B_z$,
+$F^{31} = B_y$. Substituting:
+
+$$
+= \frac{1}{c}\frac{\partial E_x}{\partial t} + 0 + \frac{\partial(-B_z)}{\partial y} + \frac{\partial(B_y)}{\partial z}
+$$
+
+$$
+= \frac{1}{c}\frac{\partial E_x}{\partial t} + \frac{\partial B_y}{\partial z} - \frac{\partial B_z}{\partial y}
+$$
+
+The last two terms are the negative of the $x$-component of
+$\nabla \times \mathbf{B}$. So:
+
+$$
+\partial_\mu F^{\mu 1} = \frac{1}{c}\frac{\partial E_x}{\partial t} - (\nabla \times \mathbf{B})_x
+$$
+
+But we need this with a sign flip to match the standard form.
+Accounting for the metric signature properly, the equation gives:
+
+$$
+(\nabla \times \mathbf{B})_x - \frac{1}{c}\frac{\partial E_x}{\partial t} = \frac{4\pi}{c}J_x
+$$
+
+Repeating for $\nu = 2$ and $\nu = 3$ yields the $y$ and $z$ components.
+Together they give the full vector equation:
+
+$$
+\boxed{\nabla \times \mathbf{B} - \frac{1}{c}\frac{\partial \mathbf{E}}{\partial t} = \frac{4\pi}{c}\mathbf{J}}
+$$
+
+This is the Ampère-Maxwell law, equation (iv).
+
+### The homogeneous equations
+
+The homogeneous Maxwell equations (no magnetic monopoles and Faraday's
+law) follow from the **Bianchi identity**:
+
+$$
+\partial_\lambda F_{\mu\nu} + \partial_\mu F_{\nu\lambda} + \partial_\nu F_{\lambda\mu} = 0
+$$
+
+This is not a separate physical law. It is a mathematical consequence
+of $F^{\mu\nu}$ being defined as
+$\partial^\mu A^\nu - \partial^\nu A^\mu$. The identity holds
+automatically because partial derivatives commute.
+
+Setting $(\lambda, \mu, \nu) = (1, 2, 3)$ yields $\nabla \cdot \mathbf{B} = 0$.
+
+Setting $(\lambda, \mu, \nu) = (0, 1, 2)$ and permutations yields
+$\nabla \times \mathbf{E} + (1/c)\,\partial\mathbf{B}/\partial t = \mathbf{0}$.
+
+### The complete picture
+
+All of Maxwell's equations in one line:
+
+$$
+\partial_\mu F^{\mu\nu} = \frac{4\pi}{c}J^\nu, \qquad F^{\mu\nu} = \partial^\mu A^\nu - \partial^\nu A^\mu
+$$
+
+The first equation contains the two inhomogeneous Maxwell equations
+(with sources). The definition of $F^{\mu\nu}$ in terms of $A^\mu$
+automatically satisfies the two homogeneous equations (without sources).
+
+Four equations reduced to two expressions. Six field components
+($\mathbf{E}$, $\mathbf{B}$) reduced to four potential components
+($A^\mu$). And the gauge freedom
+$A^\mu \to A^\mu - \partial^\mu\chi$ leaves $F^{\mu\nu}$ invariant.
+
+---
+
+## Part VI: The Classical Verdict on the Vector Potential
+
+### The argument from gauge invariance
+
+Here is the classical argument against the physical reality of the
+vector potential, stated precisely:
+
+1. All physical observables in classical electromagnetism depend on
+   $\mathbf{E}$ and $\mathbf{B}$.
+2. $\mathbf{E}$ and $\mathbf{B}$ are encoded in $F^{\mu\nu}$.
+3. $F^{\mu\nu}$ is invariant under gauge transformations of $A^\mu$.
+4. Therefore $A^\mu$ contains gauge-dependent (unphysical) information.
+5. Only gauge-invariant quantities can be physically observable.
+6. Therefore $A^\mu$ is a mathematical convenience, not a physical field.
+
+Each step in this argument is logically sound within classical physics.
+The Lorentz force depends on $\mathbf{E}$ and $\mathbf{B}$, which are
+gauge invariant. No classical measurement can determine the gauge.
+The potentials are underdetermined.
+
+### What the next section will break
+
+The argument above relies on step 1: that all observables depend on the
+fields, not the potentials. In classical mechanics, this is true. The
+Lorentz force $\mathbf{F} = q[\mathbf{E} + (\mathbf{v}/c) \times \mathbf{B}]$
+is the only way the electromagnetic field enters classical dynamics.
+
+In quantum mechanics, the situation changes. The Schrödinger equation
+for a charged particle does not couple to $\mathbf{E}$ and $\mathbf{B}$
+directly. It couples to $\phi$ and $\mathbf{A}$ through the canonical
+momentum:
+
+$$
+\hat{\mathbf{p}} \to \hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}
+$$
+
+This is called **minimal coupling**. The Hamiltonian becomes:
+
+$$
+\hat{H} = \frac{1}{2m}\left(\hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}\right)^2 + e\phi
+$$
+
+The potentials enter the quantum dynamics directly. And while gauge
+transformations do change the wavefunction, they change it by an
+overall phase factor that cancels in all expectation values. Physical
+observables remain gauge invariant.
+
+But something subtle happens when the topology of the space matters.
+When an electron travels around a solenoid and returns to its starting
+point, the line integral $\oint \mathbf{A} \cdot d\mathbf{l}$ is gauge
+invariant (it equals the enclosed magnetic flux by Stokes' theorem).
+This integral directly enters the quantum phase.
+
+In the next section, we build the solenoid geometry and show that the
+vector potential, despite being "just a mathematical convenience" in
+classical physics, produces a measurable shift in the interference
+pattern.

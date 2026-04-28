@@ -55,6 +55,25 @@ body {
   color: var(--color-text-primary);
 }
 
+.mdx-content .katex-display {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Hide the horizontal scrollbar but keep scrollability if needed */
+.mdx-content .katex-display::-webkit-scrollbar {
+  display: none;
+}
+
+.mdx-content .katex-display {
+  scrollbar-width: none;
+}
+
+/* Prevent KaTeX from showing overflow arrows */
+.katex-display > .katex {
+  overflow: visible;
+}
 /* MDX prose styling */
 .mdx-content h2 {
   font-size: 1.5rem;
