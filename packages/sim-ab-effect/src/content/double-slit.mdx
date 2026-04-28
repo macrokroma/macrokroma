@@ -1,0 +1,68 @@
+## The Double-Slit Experiment
+
+Before we can understand the Aharonov–Bohm effect, we need to understand
+what happens when electrons pass through two slits — no magnetic fields,
+no vector potentials, just quantum mechanics at its most fundamental.
+
+### Wavefunctions and superposition
+
+An electron isn't a tiny ball that goes through one slit or the other.
+It's described by a **wavefunction** $\psi(\mathbf{r}, t)$ — a complex-valued
+field that fills all of space. The probability of detecting the electron
+at position $\mathbf{r}$ is the squared magnitude of the wavefunction:
+
+$$
+P(\mathbf{r}) = |\psi(\mathbf{r})|^2
+$$
+
+When the electron encounters two slits, the wavefunction splits. After the
+slits, the total wavefunction is a superposition of the contributions
+from each slit:
+
+$$
+\psi_{\text{total}} = \psi_1 + \psi_2
+$$
+
+### From path difference to phase difference
+
+Each slit acts as a point source of spherical waves. A wave from slit $j$
+arriving at position $x$ on the screen has traveled a distance $r_j$ and
+accumulated a phase $\phi_j = k \cdot r_j$, where $k = 2\pi / \lambda$
+is the wave number:
+
+$$
+\psi_j(x) = \frac{1}{\sqrt{r_j}} \, e^{i k r_j}
+$$
+
+The key quantity is the **path difference** $\Delta r = r_2 - r_1$ between
+the two routes. This creates a **phase difference**:
+
+$$
+\Delta\phi = k \cdot \Delta r = \frac{2\pi}{\lambda}(r_2 - r_1)
+$$
+
+### The intensity pattern
+
+The probability density — what we actually measure on the screen — comes
+from squaring the total amplitude:
+
+$$
+I(x) = |\psi_1 + \psi_2|^2 = |\psi_1|^2 + |\psi_2|^2 + 2\,\text{Re}(\psi_1^* \psi_2)
+$$
+
+That cross-term $2\,\text{Re}(\psi_1^* \psi_2)$ is the **interference term**.
+It oscillates as a function of position, creating the characteristic pattern
+of bright and dark fringes. When the phase difference is a multiple of $2\pi$,
+the waves reinforce. When it's an odd multiple of $\pi$, they cancel.
+
+### What you're looking at below
+
+The simulation computes this intensity pattern across 512 points on the
+screen. Try adjusting the parameters:
+
+- **Wavelength** controls how tightly the fringes are spaced — shorter wavelengths mean more oscillations
+- **Slit separation** determines the angular spacing of the fringes
+- **Screen distance** sets how far the pattern has propagated
+
+The **flux slider is set to zero** for now — there's no solenoid yet.
+We'll add that in the next section and watch what changes.

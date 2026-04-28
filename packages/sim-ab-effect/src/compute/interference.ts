@@ -4,8 +4,16 @@ import type { ABParams } from "../store/abStore";
 export interface InterferenceResult {
   /** Screen positions (normalized, -1 to 1). */
   positions: Float64Array;
-  /** Intensity values at each screen position. */
+  /** Combined intensity |ψ₁ + ψ₂|² at each screen position. */
   intensities: Float64Array;
+  /** Individual intensity |ψ₁|² from slit 1. */
+  intensities1: Float64Array;
+  /** Individual intensity |ψ₂|² from slit 2. */
+  intensities2: Float64Array;
+  /** Real part of ψ₁ (for waveform overlay). */
+  re1: Float64Array;
+  /** Real part of ψ₂ (for waveform overlay). */
+  re2: Float64Array;
   /** Number of data points. */
   count: number;
 }
@@ -29,6 +37,10 @@ export function computeInterference(
 
   const positions = new Float64Array(numPoints);
   const intensities = new Float64Array(numPoints);
+  const intensities1 = new Float64Array(numPoints);
+  const intensities2 = new Float64Array(numPoints);
+  const re1 = new Float64Array(numPoints);
+  const re2 = new Float64Array(numPoints);
 
   // AB phase shift: Δφ = 2π × (Φ/Φ₀)
   const abPhase = 2 * Math.PI * flux;
@@ -39,37 +51,34 @@ export function computeInterference(
   // Half the slit separation
   const d2 = slitSeparation / 2;
 
-  // Screen coordinates span
-  const screenHalf = screenDistance * 0.5;
+  // Screen distance in nm (convert from μm)
+  const L = screenDistance * 1000;
+
+  // Fixed physical screen half-width (in nm).
+  const screenHalfWidth = 5000;
 
   for (let i = 0; i < numPoints; i++) {
-    // Map index to screen position (-1 to 1, normalized)
     const t = (i / (numPoints - 1)) * 2 - 1;
     positions[i] = t;
 
-    // Physical screen position
-    const x = t * screenHalf * 1000; // convert μm to nm
+    const x = t * screenHalfWidth;
 
-    // Path lengths from each slit to screen position
-    const r1 = Math.sqrt(
-      (screenDistance * 1000) ** 2 + (x - d2) ** 2,
-    );
-    const r2 = Math.sqrt(
-      (screenDistance * 1000) ** 2 + (x + d2) ** 2,
-    );
+    const r1 = Math.sqrt(L * L + (x - d2) * (x - d2));
+    const r2 = Math.sqrt(L * L + (x + d2) * (x + d2));
 
-    // Wavefunctions from each slit (path 2 picks up the AB phase)
     const psi1: Complex = complex.cis(k * r1);
     const psi2: Complex = complex.cis(k * r2 + abPhase);
 
-    // Total wavefunction = superposition
     const psiTotal = complex.add(psi1, psi2);
 
-    // Probability density (intensity) = |ψ|²
     intensities[i] = complex.magnitudeSquared(psiTotal);
+    intensities1[i] = complex.magnitudeSquared(psi1);
+    intensities2[i] = complex.magnitudeSquared(psi2);
+    re1[i] = psi1[0];
+    re2[i] = psi2[0];
   }
 
-  // Normalize intensities to [0, 1]
+  // Normalize combined intensities to [0, 1]
   let max = 0;
   for (let i = 0; i < numPoints; i++) {
     if (intensities[i]! > max) max = intensities[i]!;
@@ -80,5 +89,5 @@ export function computeInterference(
     }
   }
 
-  return { positions, intensities, count: numPoints };
+  return { positions, intensities, intensities1, intensities2, re1, re2, count: numPoints };
 }

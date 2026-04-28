@@ -1,6 +1,7 @@
+@import "katex/dist/katex.min.css";
 @import "tailwindcss";
 @source "../../shared/src/**/*.{ts,tsx}";
-@source "../../sim-ab-effect/src/**/*.{ts,tsx}";
+@source "../../sim-ab-effect/src/**/*.{ts,tsx,mdx}";
 /*
  * CSS custom properties for theming.
  * All simulation suites and the site shell share these tokens.
@@ -47,4 +48,41 @@ body {
 
 .r3f-canvas-container canvas {
   display: block;
+}
+
+/* KaTeX dark-theme overrides */
+.katex {
+  color: var(--color-text-primary);
+}
+
+/* MDX prose styling */
+.mdx-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.mdx-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mdx-content p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+.mdx-content strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.mdx-content .katex-display {
+  margin: 1.5rem 0;
+  overflow-x: auto;
 }

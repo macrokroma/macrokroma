@@ -3,7 +3,7 @@ import { create } from "zustand";
 export interface ABParams {
   /** Enclosed magnetic flux in units of flux quanta (Φ/Φ₀). Range: 0 to 2. */
   flux: number;
-  /** Electron wavelength in nm. Range: 0.01 to 10. */
+  /** Electron wavelength in nm. Range: 0.1 to 10. */
   wavelength: number;
   /** Slit separation in nm. Range: 10 to 1000. */
   slitSeparation: number;
@@ -21,9 +21,9 @@ interface ABStore extends ABParams {
 
 const defaults: ABParams = {
   flux: 0,
-  wavelength: 1.0,
-  slitSeparation: 200,
-  screenDistance: 10,
+  wavelength: 5.0,
+  slitSeparation: 100,
+  screenDistance: 50,
 };
 
 export const useABStore = create<ABStore>()((set) => ({

@@ -1,10 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import mdx from "@mdx-js/rollup";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    // MDX must come before React so JSX in .mdx files is handled correctly
+    mdx({
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
+    }),
     react(),
     tailwindcss(),
   ],
