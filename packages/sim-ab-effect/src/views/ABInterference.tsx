@@ -12,12 +12,12 @@ import { computeInterference } from "../compute/interference";
  * and the parameter panels will be built out in subsequent sessions.
  */
 export function ABInterference() {
-  const { flux, wavelength, slitSeparation, screenDistance, setFlux } =
+  const { flux, wavelength, slitSeparation, slitWidth, screenDistance, setFlux } =
     useABStore();
 
   const { result } = useSimulation({
     compute: computeInterference,
-    params: { flux, wavelength, slitSeparation, screenDistance },
+    params: { flux, wavelength, slitSeparation, slitWidth, screenDistance },
   });
 
   return (
