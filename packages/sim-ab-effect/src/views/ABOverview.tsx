@@ -5,17 +5,17 @@
  */
 export function ABOverview() {
   return (
-    <div className="flex flex-col gap-6 p-6 max-w-3xl mx-auto">
+    <div className="flex flex-col gap-6 p-6 max-w-4xl mx-auto">
       <div>
         <h2 className="text-2xl font-semibold mb-3">
           The Aharonov–Bohm Effect
         </h2>
         <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
           In classical electromagnetism, charged particles respond only to
-          electric and magnetic fields — the vector potential is considered a
-          mathematical convenience with no physical meaning. The Aharonov–Bohm
+          electric and magnetic fields. The vector potential is considered a
+          mathematical convenience with no physical meaning. The Aharonov-Bohm
           effect proves this wrong. Electrons passing through a region where
-          the magnetic field is zero — but the vector potential is not — still
+          the magnetic field is zero, but the vector potential is not, still
           acquire a measurable phase shift that alters their interference
           pattern.
         </p>
@@ -45,7 +45,7 @@ export function ABOverview() {
           {
             num: 4,
             title: "The AB Phase Shift",
-            desc: "Putting it all together — flux shifts fringes, and the pattern quantizes.",
+            desc: "Putting it all together: flux shifts fringes, and the pattern quantizes.",
           },
           {
             num: 5,

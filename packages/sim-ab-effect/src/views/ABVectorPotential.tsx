@@ -9,7 +9,7 @@ import VectorPotentialTheory from "../content/vector-potential.mdx";
  */
 export function ABVectorPotential() {
   return (
-    <div className="flex flex-col gap-8 p-6 max-w-3xl mx-auto">
+    <div className="flex flex-col gap-8 p-6 max-w-4xl mx-auto">
       <div className="mdx-content">
         <VectorPotentialTheory />
       </div>

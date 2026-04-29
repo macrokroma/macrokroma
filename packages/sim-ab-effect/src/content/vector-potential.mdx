@@ -1,4 +1,10 @@
 import { VectorFieldExplorer } from "../components/VectorFieldExplorer";
+import { ScalarFieldExplorer } from "../components/ScalarFieldExplorer";
+import { ElectricFieldExplorer } from "../components/ElectricFieldExplorer";
+import { SolenoidFieldExplorer } from "../components/SolenoidFieldExplorer";
+import { LorentzTransformExplorer } from "../components/LorentzTransformExplorer";
+import { GaugeTransformExplorer } from "../components/GaugeTransformExplorer";
+import { TensorExplorer } from "../components/TensorExplorer";
 
 ## The Vector Potential
 
@@ -11,8 +17,6 @@ This section builds from the ground up: what fields are, how
 classical electrodynamics works, how potentials simplify the
 description, and why classical physics insists that potentials
 are "just math." The next section will break that assumption.
-
----
 
 ## Part I: Fields
 
@@ -39,6 +43,15 @@ Scalar fields have no direction associated with them, only magnitude.
 
 Other examples include pressure, density, and the electric potential
 (which we will meet shortly).
+
+Explore a scalar field below. The color represents the value of the
+function at each point (warm colors for high values, cool for low).
+The contour lines connect points of equal value. Toggle the gradient
+to see the vector field $-\nabla f$, which points in the direction of
+steepest decrease (this is exactly how the electric field relates
+to the electric potential: $\mathbf{E} = -\nabla\phi$).
+
+<ScalarFieldExplorer />
 
 ### Vector fields
 
@@ -143,8 +156,6 @@ anywhere to read the local values.
 
 <VectorFieldExplorer />
 
----
-
 ## Part II: Classical Electrodynamics
 
 ### The electric and magnetic fields
@@ -170,6 +181,15 @@ definition of $\mathbf{B}$.)
 
 This is an empirical law. It tells us what $\mathbf{E}$ and $\mathbf{B}$ do,
 but not where they come from. For that, we need Maxwell's equations.
+
+Explore the electric field below. Drag charges to rearrange them and
+watch the field update in real time. Toggle between viewing the field
+arrows (E), the scalar potential ($\phi$), or both overlaid. Notice how
+field lines emanate from positive charges and terminate on negative
+charges, and how the equipotential contours are perpendicular to the
+field lines.
+
+<ElectricFieldExplorer />
 
 ### Maxwell's equations
 
@@ -227,8 +247,6 @@ $$
 $$
 
 We call $\mathbf{A}$ the **magnetic vector potential**.
-
----
 
 ## Part III: The Potentials
 
@@ -306,6 +324,18 @@ Given $\phi$ and $\mathbf{A}$, we can always recover $\mathbf{E}$ and $\mathbf{B
 Four components ($\phi$ and the three components of $\mathbf{A}$) replace
 six (three of $\mathbf{E}$ and three of $\mathbf{B}$).
 
+Explore the vector potential of a solenoid below. The 2D view shows a
+cross-section looking down the solenoid axis. Inside the dashed circle,
+the B field points out of the screen (green dots). Outside, B is zero,
+but the vector potential A (purple arrows) circulates everywhere. This
+is the geometry that makes the Aharonov-Bohm effect possible: electrons
+traveling outside the solenoid encounter A but never B.
+
+Toggle between A and B to see each field independently, or view both
+overlaid. Adjust the flux slider to scale the fields.
+
+<SolenoidFieldExplorer />
+
 ### Gauge invariance: the potentials are not unique
 
 Here is the critical point. The potentials $\phi$ and $\mathbf{A}$ are
@@ -369,7 +399,18 @@ are considered mathematical tools with no independent physical reality.
 
 Or so the classical argument goes.
 
----
+See gauge invariance in action below. Start in the Coulomb gauge,
+then select a different gauge function $\chi$ and drag the blend
+slider from 0 to 1. The vector potential A (purple arrows) deforms,
+sometimes dramatically. But the magnetic field B (green shading inside
+the solenoid) does not change at all. Hover to compare the numerical
+values: A changes, B stays constant to numerical precision.
+
+This is the visual punchline of classical electrodynamics. The
+potentials are not unique. The physics is in the fields, not the
+potentials. Or at least, that is what classical physics claims.
+
+<GaugeTransformExplorer />
 
 ## Part IV: Relativity and the Four-Potential
 
@@ -397,6 +438,16 @@ and "magnetic" parts depends on the observer's state of motion.
 This means $\mathbf{E}$ and $\mathbf{B}$ are not fundamental in the
 relativistic sense. They are frame-dependent components of something
 deeper.
+
+Explore this below. The left panel shows the fields in the rest frame S.
+The right panel shows the same physical situation as seen from a frame S'
+moving with velocity $\beta c$ along the x-axis. Drag the boost slider
+and watch a magnetic field appear from what was a purely electric
+configuration, or vice versa. Hover anywhere to compare the field
+components in both frames and verify that the Lorentz invariants
+$\mathbf{E} \cdot \mathbf{B}$ and $E^2 - B^2$ remain unchanged.
+
+<LorentzTransformExplorer />
 
 ### Four-vectors and spacetime
 
@@ -527,8 +578,6 @@ $$
 The field strength tensor is gauge invariant. This is the mathematical
 statement that $\mathbf{E}$ and $\mathbf{B}$ do not depend on the choice
 of gauge.
-
----
 
 ## Part V: Maxwell's Equations in Tensor Form
 
@@ -675,7 +724,15 @@ Four equations reduced to two expressions. Six field components
 ($A^\mu$). And the gauge freedom
 $A^\mu \to A^\mu - \partial^\mu\chi$ leaves $F^{\mu\nu}$ invariant.
 
----
+Explore the field strength tensor below. Set the E and B components
+using the sliders (or choose a preset), then apply a Lorentz boost.
+Watch the individual tensor entries change as E and B mix between
+frames. The two Lorentz invariants, $\mathbf{E} \cdot \mathbf{B}$
+and $E^2 - B^2$, remain exactly the same regardless of the boost
+velocity. The tensor is the frame-independent object; E and B are
+just how it looks from a particular point of view.
+
+<TensorExplorer />
 
 ## Part VI: The Classical Verdict on the Vector Potential
 

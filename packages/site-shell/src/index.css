@@ -24,6 +24,9 @@
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
   --font-serif: "Newsreader", "Georgia", serif;
+
+  /* Sim canvas size */
+  --sim-canvas-size: 560px;
 }
 
 html {
@@ -61,7 +64,6 @@ body {
   overflow-y: hidden;
 }
 
-/* Hide the horizontal scrollbar but keep scrollability if needed */
 .mdx-content .katex-display::-webkit-scrollbar {
   display: none;
 }
@@ -70,15 +72,15 @@ body {
   scrollbar-width: none;
 }
 
-/* Prevent KaTeX from showing overflow arrows */
 .katex-display > .katex {
   overflow: visible;
 }
+
 /* MDX prose styling */
 .mdx-content h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   margin-bottom: 0.75rem;
 }
 
@@ -91,7 +93,7 @@ body {
 
 .mdx-content p {
   font-size: 0.9375rem;
-  line-height: 1.75;
+  line-height: 1.8;
   color: var(--color-text-secondary);
   margin-bottom: 1rem;
 }
@@ -101,7 +103,15 @@ body {
   font-weight: 600;
 }
 
-.mdx-content .katex-display {
-  margin: 1.5rem 0;
-  overflow-x: auto;
+.mdx-content ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+.mdx-content ol li {
+  margin-bottom: 0.25rem;
 }
