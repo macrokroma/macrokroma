@@ -3,5 +3,6 @@ export { ABOverview } from "./views/ABOverview";
 export { ABInterference } from "./views/ABInterference";
 export { ABDoubleSlit } from "./views/ABDoubleSlit";
 export { ABVectorPotential } from "./views/ABVectorPotential";
+export { ABSolenoid } from "./views/ABSolenoid";
 export { useABStore } from "./store/abStore";
 export type { ABParams } from "./store/abStore";

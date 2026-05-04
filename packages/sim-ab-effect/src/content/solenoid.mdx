@@ -1,0 +1,437 @@
+import { ABGeometryExplorer } from "../components/ABGeometryExplorer";
+import { ABShiftedPattern } from "../components/ABShiftedPattern";
+
+## The Solenoid and the AB Phase
+
+We now have all the ingredients. From Section 1, we know how
+double-slit interference works: two paths, a phase difference,
+and an intensity pattern that depends on that difference. From
+Section 2, we know that the vector potential A is classically
+considered a mathematical convenience, not a physical field.
+
+This section brings them together. We place a solenoid between
+the slits and show that the vector potential, despite producing
+no force on the electrons, shifts the interference pattern.
+
+## The Setup
+
+### An ideal solenoid
+
+Consider an infinitely long solenoid of radius $R$ carrying a
+steady current. Inside the solenoid, the magnetic field is
+uniform and parallel to the axis:
+
+$$
+\mathbf{B} = B_0 \,\hat{\mathbf{z}} \qquad (r < R)
+$$
+
+Outside the solenoid, the magnetic field vanishes:
+
+$$
+\mathbf{B} = \mathbf{0} \qquad (r > R)
+$$
+
+This is a standard result from magnetostatics, derived by
+applying Ampère's law to rectangular loops that cross the
+solenoid boundary.
+
+The total magnetic flux through the solenoid is:
+
+$$
+\Phi = B_0 \cdot \pi R^2
+$$
+
+### The vector potential outside
+
+Even though $\mathbf{B} = \mathbf{0}$ outside the solenoid, the
+vector potential $\mathbf{A}$ is not zero there. To find A outside,
+we use Stokes' theorem. For any closed loop $\mathcal{C}$
+encircling the solenoid:
+
+$$
+\oint_{\mathcal{C}} \mathbf{A} \cdot d\boldsymbol{\ell}
+= \iint_{S} (\nabla \times \mathbf{A}) \cdot d\mathbf{S}
+= \iint_{S} \mathbf{B} \cdot d\mathbf{S}
+= \Phi
+$$
+
+The surface integral of B picks up the full flux $\Phi$ because
+the surface bounded by $\mathcal{C}$ passes through the interior
+of the solenoid where $\mathbf{B} \neq \mathbf{0}$.
+
+For a circular loop of radius $r > R$ centered on the solenoid
+axis, symmetry demands that A is purely azimuthal and constant
+in magnitude around the loop:
+
+$$
+\oint_{\mathcal{C}} \mathbf{A} \cdot d\boldsymbol{\ell}
+= A_\theta \cdot 2\pi r = \Phi
+$$
+
+Solving for $A_\theta$:
+
+$$
+A_\theta(r) = \frac{\Phi}{2\pi r} \qquad (r > R)
+$$
+
+In vector form, using the azimuthal unit vector
+$\hat{\boldsymbol{\theta}} = (-\sin\theta,\, \cos\theta,\, 0)$:
+
+$$
+\mathbf{A}(r, \theta) = \frac{\Phi}{2\pi r}\,\hat{\boldsymbol{\theta}}
+\qquad (r > R)
+$$
+
+Let us verify that this gives $\mathbf{B} = \mathbf{0}$ outside.
+The curl in cylindrical coordinates for a purely azimuthal field
+$\mathbf{A} = A_\theta(r)\,\hat{\boldsymbol{\theta}}$ is:
+
+$$
+\nabla \times \mathbf{A} = \frac{1}{r}\frac{\partial(r A_\theta)}{\partial r}\,\hat{\mathbf{z}}
+$$
+
+Substituting $A_\theta = \Phi/(2\pi r)$:
+
+$$
+r A_\theta = \frac{\Phi}{2\pi} = \text{constant}
+$$
+
+The derivative of a constant is zero:
+
+$$
+\nabla \times \mathbf{A} = \frac{1}{r} \cdot 0 = \mathbf{0}
+\qquad (r > R) \quad \checkmark
+$$
+
+So the curl of A vanishes outside the solenoid, confirming
+$\mathbf{B} = \mathbf{0}$ there. But A itself is nonzero and
+circulates everywhere outside.
+
+This is the geometry we explored in the solenoid simulation
+in the previous section. The key point bears repeating: the
+electrons travel in a region where $\mathbf{B} = \mathbf{0}$
+but $\mathbf{A} \neq \mathbf{0}$.
+
+### Inside the solenoid
+
+For completeness, inside the solenoid ($r < R$), we need
+$\nabla \times \mathbf{A} = B_0\,\hat{\mathbf{z}}$. By symmetry,
+A is again azimuthal. Using Stokes' theorem on a circle of
+radius $r < R$:
+
+$$
+A_\theta \cdot 2\pi r = B_0 \cdot \pi r^2
+$$
+
+$$
+A_\theta(r) = \frac{B_0 \, r}{2} = \frac{\Phi \, r}{2\pi R^2}
+\qquad (r < R)
+$$
+
+Inside, A grows linearly with $r$. Outside, it falls off as $1/r$.
+At the boundary $r = R$, both expressions give
+$A_\theta(R) = \Phi/(2\pi R)$, confirming continuity.
+
+## The Quantum Phase
+
+### Minimal coupling
+
+In quantum mechanics, the Hamiltonian for a charged particle
+(charge $e$, mass $m$) in an electromagnetic field is obtained
+by the **minimal coupling** prescription:
+
+$$
+\hat{\mathbf{p}} \to \hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}
+$$
+
+The Schrödinger equation becomes:
+
+$$
+i\hbar \frac{\partial \Psi}{\partial t}
+= \left[
+\frac{1}{2m}\left(\hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}\right)^2
++ e\phi
+\right] \Psi
+$$
+
+For the AB setup, there is no electric field ($\phi = 0$) and
+the vector potential is time-independent. The key question is:
+what is the effect of A on the wavefunction?
+
+### The phase factor
+
+Consider a particle moving from point $\mathbf{x}_0$ to point
+$\mathbf{x}$ along some path. If $\Psi_0$ is the wavefunction
+in the absence of A (the free-particle solution), then the
+wavefunction in the presence of A is:
+
+$$
+\Psi(\mathbf{x}, t) = \Psi_0(\mathbf{x}, t) \,
+\exp\!\left(\frac{ie}{\hbar c} \int_{\mathbf{x}_0}^{\mathbf{x}}
+\mathbf{A}(\mathbf{x}') \cdot d\mathbf{x}'\right)
+$$
+
+Let us derive this. Start with the Schrödinger equation in the
+Coulomb gauge ($\nabla \cdot \mathbf{A} = 0$, $\phi = 0$):
+
+$$
+i\hbar \frac{\partial \Psi}{\partial t}
+= \frac{1}{2m}\left(\hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}\right)^2 \Psi
+$$
+
+Write $\hat{\mathbf{p}} = (\hbar/i)\nabla$ and expand the square:
+
+$$
+\left(\hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}\right)^2 \Psi
+= -\hbar^2 \nabla^2 \Psi
++ \frac{i\hbar e}{c}\left(\nabla \cdot (\mathbf{A}\Psi) + \mathbf{A} \cdot \nabla\Psi\right)
++ \frac{e^2}{c^2}A^2 \Psi
+$$
+
+In the Coulomb gauge, $\nabla \cdot \mathbf{A} = 0$, so
+$\nabla \cdot (\mathbf{A}\Psi) = \mathbf{A} \cdot \nabla\Psi$.
+This simplifies to:
+
+$$
+\left(\hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}\right)^2 \Psi
+= -\hbar^2 \nabla^2 \Psi
++ \frac{2i\hbar e}{c}\mathbf{A} \cdot \nabla\Psi
++ \frac{e^2}{c^2}A^2 \Psi
+$$
+
+Now make the substitution $\Psi = \Psi_0 \, e^{i\chi}$ where
+$\chi(\mathbf{x}) = (e/\hbar c)\int_{\mathbf{x}_0}^{\mathbf{x}} \mathbf{A} \cdot d\mathbf{x}'$.
+Computing $\nabla\Psi$:
+
+$$
+\nabla\Psi = (\nabla\Psi_0)\,e^{i\chi} + \Psi_0\,(i\nabla\chi)\,e^{i\chi}
+$$
+
+Since $\nabla\chi = (e/\hbar c)\mathbf{A}$, the A-dependent terms
+cancel, and $\Psi_0$ satisfies the free Schrödinger equation:
+
+$$
+i\hbar \frac{\partial \Psi_0}{\partial t} = -\frac{\hbar^2}{2m}\nabla^2 \Psi_0
+$$
+
+This confirms that the effect of a static vector potential on a
+quantum particle is a **position-dependent phase factor**:
+
+$$
+\boxed{
+\Psi(\mathbf{x}) = \Psi_0(\mathbf{x}) \,
+\exp\!\left(\frac{ie}{\hbar c} \int_{\mathbf{x}_0}^{\mathbf{x}}
+\mathbf{A} \cdot d\mathbf{x}'\right)
+}
+$$
+
+The amplitude $|\Psi|^2 = |\Psi_0|^2$ is unchanged. A single
+particle traveling along a single path acquires a phase that has
+no observable consequence (it is a global phase). The magic
+happens when two paths are involved.
+
+Explore the AB geometry below. The electron source is on the left,
+the detection screen on the right, and the solenoid sits between them.
+Electrons travel along two paths (above and below the solenoid).
+Toggle phase coloring to see how the accumulated phase changes along
+each path. Toggle the A field to see the vector potential circulating
+around the solenoid. As you increase the flux, the phase difference
+between the two paths grows, even though the electrons never enter
+the solenoid.
+
+<ABGeometryExplorer />
+
+## Two Paths, Two Phases
+
+### The AB experiment
+
+An electron beam is split into two paths that pass on opposite
+sides of the solenoid and recombine at a detection screen,
+exactly as in the double-slit setup from Section 1.
+
+Path $a$ goes above the solenoid. Path $b$ goes below. Each
+path picks up a phase from the line integral of A:
+
+$$
+\Psi_a = \Psi_{a_0} \,
+\exp\!\left(\frac{ie}{\hbar c} \int_a \mathbf{A} \cdot d\mathbf{x}\right)
+$$
+
+$$
+\Psi_b = \Psi_{b_0} \,
+\exp\!\left(\frac{ie}{\hbar c} \int_b \mathbf{A} \cdot d\mathbf{x}\right)
+$$
+
+### The total wavefunction
+
+The total wavefunction at the screen is the superposition:
+
+$$
+\Psi = \Psi_a + \Psi_b
+$$
+
+Factor out the phase from path $b$:
+
+$$
+\Psi = \left[
+\Psi_{a_0} \, e^{i\frac{e}{\hbar c}\left(\int_a \mathbf{A} \cdot d\mathbf{x} - \int_b \mathbf{A} \cdot d\mathbf{x}\right)}
++ \Psi_{b_0}
+\right]
+e^{i\frac{e}{\hbar c}\int_b \mathbf{A} \cdot d\mathbf{x}}
+$$
+
+The overall phase factor $e^{i(e/\hbar c)\int_b \mathbf{A} \cdot d\mathbf{x}}$
+is a global phase that drops out when we compute $|\Psi|^2$.
+What remains is a **relative phase** between the two paths:
+
+$$
+\Delta\varphi = \frac{e}{\hbar c}\left(
+\int_a \mathbf{A} \cdot d\mathbf{x}
+- \int_b \mathbf{A} \cdot d\mathbf{x}
+\right)
+$$
+
+### Stokes' theorem and the closed loop
+
+The difference of the two line integrals is a line integral
+around a closed loop (path $a$ forward, then path $b$ backward):
+
+$$
+\int_a \mathbf{A} \cdot d\mathbf{x}
+- \int_b \mathbf{A} \cdot d\mathbf{x}
+= \oint_{\mathcal{C}} \mathbf{A} \cdot d\mathbf{x}
+$$
+
+By Stokes' theorem:
+
+$$
+\oint_{\mathcal{C}} \mathbf{A} \cdot d\mathbf{x}
+= \iint_S (\nabla \times \mathbf{A}) \cdot d\mathbf{S}
+= \iint_S \mathbf{B} \cdot d\mathbf{S}
+= \Phi
+$$
+
+The surface $S$ bounded by the closed loop $\mathcal{C}$ encloses
+the solenoid, so the surface integral captures the full flux
+$\Phi$, even though $\mathbf{B} = \mathbf{0}$ along the paths
+themselves.
+
+Therefore the AB phase is:
+
+$$
+\boxed{
+\Delta\varphi = \frac{e}{\hbar c}\,\Phi = \frac{2\pi\Phi}{\Phi_0}
+}
+$$
+
+where $\Phi_0 = hc/e = 2\pi\hbar c/e$ is the **magnetic flux quantum**.
+
+### The probability density
+
+The measured intensity at the screen is:
+
+$$
+P = |\Psi|^2 = |\Psi_{a_0}|^2 + |\Psi_{b_0}|^2
++ 2\,\text{Re}\!\left(\Psi_{a_0}^* \Psi_{b_0} \, e^{i\Delta\varphi}\right)
+$$
+
+Compare this with the zero-flux result from Section 1:
+
+$$
+P_0 = |\Psi_{a_0}|^2 + |\Psi_{b_0}|^2
++ 2\,\text{Re}\!\left(\Psi_{a_0}^* \Psi_{b_0}\right)
+$$
+
+The only difference is the factor $e^{i\Delta\varphi}$ in the
+interference term. This shifts the fringe pattern laterally by
+an amount proportional to the enclosed flux.
+
+See this shift in action below. The purple curve is the interference
+pattern at the current flux setting. The faint white curve is the
+zero-flux reference. As you increase the flux, watch the fringes
+slide to the side while the diffraction envelope (green, if toggled)
+stays fixed. At integer values of Φ/Φ₀, the pattern returns to its
+original position.
+
+<ABShiftedPattern />
+
+### Gauge invariance of the result
+
+The AB phase $\Delta\varphi = (e/\hbar c)\oint \mathbf{A} \cdot d\mathbf{l}$
+is a closed-loop integral. Under a gauge transformation
+$\mathbf{A} \to \mathbf{A} + \nabla\chi$:
+
+$$
+\oint (\mathbf{A} + \nabla\chi) \cdot d\mathbf{l}
+= \oint \mathbf{A} \cdot d\mathbf{l} + \oint \nabla\chi \cdot d\mathbf{l}
+$$
+
+The second integral vanishes because the line integral of a
+gradient around any closed loop is zero (for single-valued $\chi$):
+
+$$
+\oint \nabla\chi \cdot d\mathbf{l} = \chi(\mathbf{x}_{\text{end}}) - \chi(\mathbf{x}_{\text{start}}) = 0
+$$
+
+So $\Delta\varphi$ is gauge invariant. The AB phase depends on
+the enclosed flux, not on the particular gauge choice for A.
+Different gauges give different A fields (as we saw in the
+gauge transformation simulation), but they all agree on the
+value of $\oint \mathbf{A} \cdot d\mathbf{l} = \Phi$.
+
+## Flux Quantization
+
+### The periodicity
+
+The interference pattern depends on $\Delta\varphi$ through the
+cosine in the interference term. Since $\cos(\alpha + 2\pi n) = \cos\alpha$
+for any integer $n$, the pattern is periodic in the flux:
+
+$$
+\Phi \to \Phi + n\Phi_0 \quad \Longrightarrow \quad
+\text{same interference pattern}
+$$
+
+At $\Phi = 0$, the standard double-slit pattern appears. As
+$\Phi$ increases from zero, the fringes shift. At $\Phi = \Phi_0$,
+the pattern has shifted by exactly one fringe spacing and looks
+identical to the $\Phi = 0$ case.
+
+### The flux quantum
+
+The fundamental period is set by:
+
+$$
+\Phi_0 = \frac{hc}{e} = \frac{2\pi\hbar c}{e}
+\approx 4.14 \times 10^{-7} \;\text{G}\cdot\text{cm}^2
+$$
+
+This is a remarkably small quantity. The AB effect is observable
+because electron wavelengths are short enough (and experimental
+techniques precise enough) to resolve phase shifts of order
+$2\pi$.
+
+## Why This Matters
+
+The AB effect demonstrates three things:
+
+**The vector potential is physical.** The electrons never encounter
+$\mathbf{B}$. They travel through a region where $\mathbf{B} = \mathbf{0}$
+and the Lorentz force is zero. Yet their interference pattern
+shifts. The shift depends on $\oint \mathbf{A} \cdot d\mathbf{l}$,
+which equals the enclosed flux. Classical electrodynamics says A is
+a mathematical tool. Quantum mechanics says it has measurable
+consequences.
+
+**Topology matters.** The effect depends on the topology of the
+space: the paths go around the solenoid, forming a loop that
+encloses flux. If both paths were on the same side of the solenoid
+(not enclosing it), the phase difference would be zero. It is the
+act of encircling the flux tube that produces the effect.
+
+**Locality is subtle.** The electrons interact with A at their
+own position (A is nonzero where they travel). In that sense, the
+interaction is local. But the value of A outside the solenoid is
+determined by the flux inside, where the electrons never go. The
+information about the enclosed flux is carried by A to the
+electrons' location, even though B does not reach them.

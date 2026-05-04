@@ -5,6 +5,7 @@ import {
   ABInterference,
   ABDoubleSlit,
   ABVectorPotential,
+  ABSolenoid,
 } from "@macrokroma/sim-ab-effect";
 import { Landing } from "./pages/Landing";
 
@@ -42,7 +43,7 @@ export function App() {
               <Route index element={<ABOverview />} />
               <Route path="double-slit" element={<ABDoubleSlit />} />
               <Route path="vector-potential" element={<ABVectorPotential />} />
-              <Route path="solenoid" element={<ComingSoon title="Solenoid Geometry" />} />
+              <Route path="solenoid" element={<ABSolenoid />} />
               <Route path="phase-shift" element={<ComingSoon title="Phase Shift" />} />
               <Route path="wavefunction" element={<ComingSoon title="Wavefunction Evolution" />} />
               <Route path="sandbox" element={<ABInterference />} />
