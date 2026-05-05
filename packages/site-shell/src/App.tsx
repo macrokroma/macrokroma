@@ -2,20 +2,14 @@ import { BrowserRouter, Routes, Route, Link } from "react-router";
 import {
   ABEffectEntry,
   ABOverview,
-  ABInterference,
   ABDoubleSlit,
   ABVectorPotential,
   ABSolenoid,
+  ABPhaseShift,
+  ABWavefunction,
+  ABSandbox,
 } from "@macrokroma/sim-ab-effect";
 import { Landing } from "./pages/Landing";
-
-function ComingSoon({ title }: { title: string }) {
-  return (
-    <div className="flex items-center justify-center h-64 text-[var(--color-text-secondary)]">
-      <p className="text-sm">{title} — coming soon</p>
-    </div>
-  );
-}
 
 export function App() {
   return (
@@ -44,9 +38,9 @@ export function App() {
               <Route path="double-slit" element={<ABDoubleSlit />} />
               <Route path="vector-potential" element={<ABVectorPotential />} />
               <Route path="solenoid" element={<ABSolenoid />} />
-              <Route path="phase-shift" element={<ComingSoon title="Phase Shift" />} />
-              <Route path="wavefunction" element={<ComingSoon title="Wavefunction Evolution" />} />
-              <Route path="sandbox" element={<ABInterference />} />
+              <Route path="phase-shift" element={<ABPhaseShift />} />
+              <Route path="wavefunction" element={<ABWavefunction />} />
+              <Route path="sandbox" element={<ABSandbox />} />
             </Route>
           </Routes>
         </main>

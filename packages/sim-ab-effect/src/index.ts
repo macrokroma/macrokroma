@@ -4,5 +4,8 @@ export { ABInterference } from "./views/ABInterference";
 export { ABDoubleSlit } from "./views/ABDoubleSlit";
 export { ABVectorPotential } from "./views/ABVectorPotential";
 export { ABSolenoid } from "./views/ABSolenoid";
+export { ABPhaseShift } from "./views/ABPhaseShift";
+export { ABWavefunction } from "./views/ABWavefunction";
+export { ABSandbox } from "./views/ABSandbox";
 export { useABStore } from "./store/abStore";
 export type { ABParams } from "./store/abStore";

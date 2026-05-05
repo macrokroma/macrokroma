@@ -1,0 +1,220 @@
+import { ABLinkedView } from "../components/ABLinkedView";
+
+## The AB Phase Shift: Prediction and Experiment
+
+The previous sections built the theoretical framework piece by
+piece: double-slit interference, the vector potential, gauge
+invariance, and the phase accumulated along paths through A.
+The conclusion is sharp and testable: a confined magnetic flux
+should shift the electron interference pattern, even though the
+electrons never encounter the magnetic field.
+
+This section traces the experimental journey from prediction
+to definitive confirmation.
+
+## The Prediction
+
+### Aharonov and Bohm, 1959
+
+In August 1959, Yakir Aharonov and David Bohm published a paper
+titled "Significance of Electromagnetic Potentials in the Quantum
+Theory" in Physical Review. They proposed a thought experiment:
+send an electron beam around both sides of a solenoid and observe
+the interference pattern on a screen behind it.
+
+Their prediction was precise. The interference fringes should
+shift by a phase:
+
+$$
+\Delta\varphi = \frac{e}{\hbar c}\,\Phi
+$$
+
+proportional to the enclosed magnetic flux $\Phi$, even in a
+region where $\mathbf{B} = \mathbf{0}$ and no classical force
+acts on the electrons.
+
+This was a direct challenge to the prevailing view that the
+vector potential was a mathematical convenience. If the prediction
+was correct, A would have to be considered a physically meaningful
+quantity, not merely a computational shortcut for deriving B.
+
+### Why it was controversial
+
+The claim was met with skepticism. The reasons were understandable:
+
+**Classical intuition.** In classical electrodynamics, a charged
+particle responds to E and B through the Lorentz force. If
+$\mathbf{B} = \mathbf{0}$ at the particle's location, there is
+no force, and therefore (classically) no effect. The AB prediction
+seemed to require "action at a distance" from the confined field.
+
+**Gauge ambiguity.** Different gauge choices give different values
+of A at any given point. How could a gauge-dependent quantity
+produce a measurable effect? The resolution, as we showed in
+Section 3, is that the phase difference
+$\oint \mathbf{A} \cdot d\mathbf{l} = \Phi$ is gauge invariant.
+But this was not immediately obvious to everyone in 1959.
+
+**Practical objections.** Any real solenoid has fringing fields at
+its ends. Critics argued that the observed effects might be due
+to electrons interacting with stray B fields, not the vector
+potential. Ruling this out required increasingly sophisticated
+experimental designs.
+
+## The Experiments
+
+### Chambers, 1960
+
+Within months of the AB paper, Robert Chambers performed the first
+experimental test. His setup used an electron biprism to split
+an electron beam, with a mono-crystalline iron filament ("iron
+whisker") providing the magnetic flux. The filament was about
+1 micron in diameter, partly cylindrical and partly conical.
+
+Chambers observed tilted interference fringes, consistent with the
+AB prediction. The fringe shift was proportional to the flux in the
+whisker, as the theory demanded.
+
+However, the experiment was heavily criticized. The iron whisker
+was not perfectly shielded: its magnetic field was not entirely
+confined, and electrons passing close to it could have experienced
+a nonzero B field. The vector potential and the magnetic field were
+not adequately separated in this geometry.
+
+### Möllenstedt and Bayh, 1962
+
+Gottfried Möllenstedt and Werner Bayh improved on Chambers' design.
+They used a tungsten-wire solenoid as the flux source, which
+provided a variable and controllable flux (unlike the fixed
+magnetization of an iron whisker). The solenoid was shielded with
+an iron-nickel alloy to reduce stray fields.
+
+They increased the current linearly from 0 to 0.8 A while recording
+the interference pattern on a moving film, producing a continuous
+record of the fringe shift as a function of flux. The measured
+flux quantum was:
+
+$$
+\Phi_q = 4.07 \times 10^{-7} \;\text{G}\cdot\text{cm}^2 \pm 14\%
+$$
+
+in good agreement with the theoretical value
+$\Phi_0 = 4.135 \times 10^{-7}\;\text{G}\cdot\text{cm}^2$.
+
+This was strong evidence, but the shielding was imperfect. Skeptics
+could still argue that residual stray fields might contribute to the
+observed shift.
+
+### Tonomura et al. I, 1982
+
+Akira Tonomura and his group at Hitachi brought electron holography
+to the problem. Instead of simply observing fringes, they recorded
+full electron holograms, which capture both the amplitude and
+phase of the electron wave. The holograms were then optically
+reconstructed to produce phase contour maps and interferograms.
+
+Their flux source was a toroidal (doughnut-shaped) magnet, which
+has a crucial advantage over a solenoid: a toroid has no ends, so
+there are no fringing fields. The magnetic flux is entirely
+confined within the torus.
+
+They fabricated tiny permalloy toroids (a few microns across) and
+passed electron beams through the hole and around the outside.
+The interference micrographs showed clear phase differences between
+electrons passing through the hole and those passing outside,
+exactly as predicted.
+
+By reversing the magnetization direction, they confirmed that the
+phase shift reversed sign, ruling out spurious effects from the
+magnet's physical structure.
+
+However, a subtle objection remained: the magnetic flux lines,
+while confined to the toroid, were not shielded by a superconductor.
+In principle, some flux might leak through the material itself,
+allowing electrons near the surface to experience a nonzero B.
+
+### Tonomura et al. II, 1986
+
+The definitive experiment came in 1986. Tonomura's group fabricated
+toroids made of permalloy (the magnetic material) covered with a
+niobium (Nb) superconducting layer. Below the superconducting
+transition temperature (about 9 K for Nb), the Meissner effect
+guarantees that $\mathbf{B} = \mathbf{0}$ everywhere outside the
+superconductor. Not approximately zero. Exactly zero, enforced by
+a fundamental quantum effect (superconducting screening currents).
+
+The experiment was performed at 5 K, well below the transition.
+Under these conditions:
+
+- The magnetic flux was completely confined inside the superconducting
+  shell.
+- $\mathbf{B} = \mathbf{0}$ was guaranteed outside by the Meissner
+  effect.
+- The only electromagnetic quantity present outside was the vector
+  potential A.
+
+The electron holography showed unambiguous fringe shifts,
+consistent with the AB prediction. The fringes on opposite sides
+of the toroid were displaced by half a fringe spacing, exactly
+matching a flux of $\Phi_0/2$.
+
+This experiment closed the debate. With the magnetic field provably
+zero outside the toroid (by the laws of superconductivity), the
+observed phase shift could only be attributed to the vector
+potential.
+
+## The Verdict
+
+### What the AB effect establishes
+
+The Aharonov-Bohm effect demonstrates three things that were not
+appreciated before 1959:
+
+**1. The vector potential is physically real.** It is not merely a
+mathematical tool for computing B. It produces measurable
+consequences (the phase shift) in a region where B vanishes. The
+classical argument from Section 2, that only gauge-invariant
+quantities are observable, remains correct. But the gauge-invariant
+quantity that matters is $\oint \mathbf{A} \cdot d\mathbf{l}$,
+not the local value of A at a point.
+
+**2. Electromagnetism is fundamentally nonlocal in a topological
+sense.** The electrons interact locally with A at their position.
+But the value of A outside the solenoid is determined by the flux
+inside, which the electrons never visit. The information about
+the enclosed flux is encoded in the topology of A (its circulation
+around the solenoid), not in the local field B.
+
+**3. Quantum mechanics accesses more of the electromagnetic field
+than classical mechanics does.** The Lorentz force depends on B.
+The Schrödinger equation depends on A. In simply connected regions
+(where every loop can be shrunk to a point), the distinction does
+not matter: A is fully determined by B up to a gauge choice. But
+when the space has holes (like the region outside a solenoid), A
+contains gauge-invariant information (the circulation) that B does
+not.
+
+### The minimal coupling
+
+The AB effect is a consequence of minimal coupling:
+
+$$
+\hat{\mathbf{p}} \to \hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}
+$$
+
+This single prescription, when combined with the topology of the
+double-slit geometry, produces a measurable and verified prediction.
+It is perhaps the most economical demonstration in all of physics
+that potentials are not merely computational tools but carry
+physical content.
+
+## The Full Picture
+
+The interactive visualization below brings together everything from
+the previous sections. The interference pattern on the right is
+driven by the same flux that controls the 3D geometry on the left.
+Drag the flux slider to see the fringes shift in real time while
+the solenoid, the vector potential, and the electron paths update
+simultaneously. This is the Aharonov-Bohm effect, complete.
+
+<ABLinkedView />

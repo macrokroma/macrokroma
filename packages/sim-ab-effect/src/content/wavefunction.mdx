@@ -1,0 +1,120 @@
+import { WavefunctionEvolution } from "../components/WavefunctionEvolution";
+
+## Wavefunction Evolution
+
+The previous sections derived the AB phase shift analytically:
+split the wavefunction into two paths, compute the line integral
+of A along each, take the difference. This gives the correct
+answer, but it treats the electron as following definite paths.
+
+In reality, the electron's wavefunction is a continuous field
+that spreads through all of space. It does not "choose" a path.
+It diffracts through both slits simultaneously, propagates around
+the solenoid as a spreading wave, and interferes with itself on
+the other side.
+
+This section solves the time-dependent Schrödinger equation
+directly, without the path approximation, and visualizes the
+full wavefunction as it evolves.
+
+## The Time-Dependent Schrödinger Equation
+
+### The equation
+
+The wavefunction $\Psi(\mathbf{r}, t)$ evolves according to:
+
+$$
+i\hbar \frac{\partial \Psi}{\partial t} = \hat{H}\Psi
+$$
+
+For a charged particle in a vector potential A (with no scalar
+potential), the Hamiltonian is:
+
+$$
+\hat{H} = \frac{1}{2m}\left(\hat{\mathbf{p}} - \frac{e}{c}\mathbf{A}\right)^2
+$$
+
+Expanding in position representation
+($\hat{\mathbf{p}} = -i\hbar\nabla$):
+
+$$
+\hat{H}\Psi = \frac{1}{2m}\left(-i\hbar\nabla - \frac{e}{c}\mathbf{A}\right)^2 \Psi
+$$
+
+$$
+= \frac{1}{2m}\left(
+-\hbar^2\nabla^2\Psi
++ \frac{i\hbar e}{c}(\nabla \cdot \mathbf{A})\Psi
++ \frac{2i\hbar e}{c}\mathbf{A}\cdot\nabla\Psi
++ \frac{e^2}{c^2}A^2\Psi
+\right)
+$$
+
+In the Coulomb gauge ($\nabla \cdot \mathbf{A} = 0$), this
+simplifies to:
+
+$$
+\hat{H}\Psi = -\frac{\hbar^2}{2m}\nabla^2\Psi
++ \frac{i\hbar e}{mc}\mathbf{A}\cdot\nabla\Psi
++ \frac{e^2}{2mc^2}A^2\Psi
+$$
+
+The first term is the kinetic energy (free propagation). The
+second is the coupling between the momentum and the vector
+potential. The third is a potential energy term proportional
+to $A^2$.
+
+### The split-operator method
+
+To solve this equation numerically, we use the **split-operator**
+technique. The time evolution operator for a small time step
+$\Delta t$ is:
+
+$$
+\Psi(t + \Delta t) = e^{-i\hat{H}\Delta t/\hbar}\,\Psi(t)
+$$
+
+We split the Hamiltonian into a kinetic part $\hat{T}$ (involving
+$\nabla^2$, diagonal in momentum space) and a potential part
+$\hat{V}$ (involving A, diagonal in position space):
+
+$$
+e^{-i\hat{H}\Delta t/\hbar}
+\approx e^{-i\hat{V}\Delta t/(2\hbar)}
+\;e^{-i\hat{T}\Delta t/\hbar}
+\;e^{-i\hat{V}\Delta t/(2\hbar)}
++ \mathcal{O}(\Delta t^3)
+$$
+
+This is the **Strang splitting**, accurate to second order in
+$\Delta t$. Each factor is easy to apply:
+
+- $e^{-i\hat{V}\Delta t/(2\hbar)}$: multiply $\Psi$ pointwise
+  in position space by a phase factor
+- $e^{-i\hat{T}\Delta t/\hbar}$: Fourier transform $\Psi$ to
+  momentum space, multiply by the kinetic phase, transform back
+
+The Fourier transforms are computed via FFT, making the whole
+scheme efficient.
+
+### What the simulation shows
+
+The visualization below solves this equation on a 2D grid (the
+plane perpendicular to the solenoid axis). A Gaussian wavepacket
+starts on the left, propagates toward a barrier with two slits,
+passes through both slits simultaneously, and encounters the
+vector potential circulating around the solenoid.
+
+The color represents the **phase** of the wavefunction (hue
+cycling through the color wheel as the phase goes from 0 to
+$2\pi$). The **brightness** represents the probability density
+$|\Psi|^2$. Where the wavefunction is large, the color is
+bright; where it is small, the display is dark.
+
+Adjust the flux to see how the AB phase modifies the interference
+pattern that forms on the far side of the solenoid. With zero
+flux, the pattern is symmetric. With nonzero flux, the fringes
+shift, exactly as predicted by the analytical calculation in
+Section 3.
+
+<WavefunctionEvolution />
