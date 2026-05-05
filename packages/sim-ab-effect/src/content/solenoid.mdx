@@ -1,5 +1,7 @@
 import { ABGeometryExplorer } from "../components/ABGeometryExplorer";
 import { ABShiftedPattern } from "../components/ABShiftedPattern";
+import { PhaseAccumulation } from "../components/PhaseAccumulation";
+import { FluxQuantizationDial } from "../components/FluxQuantizationDial";
 
 ## The Solenoid and the AB Phase
 
@@ -379,6 +381,17 @@ Different gauges give different A fields (as we saw in the
 gauge transformation simulation), but they all agree on the
 value of $\oint \mathbf{A} \cdot d\mathbf{l} = \Phi$.
 
+The visualization below shows the accumulated line integral
+$\int \mathbf{A} \cdot d\mathbf{l}$ along each path, plotted
+as a function of progress from source to screen. Path a (amber)
+and path b (blue) start at zero and accumulate phase differently
+as they curve around opposite sides of the solenoid. The shaded
+region between the curves is the phase difference that produces
+the interference shift. Hover to inspect the values at any point
+along the journey.
+
+<PhaseAccumulation />
+
 ## Flux Quantization
 
 ### The periodicity
@@ -410,6 +423,15 @@ This is a remarkably small quantity. The AB effect is observable
 because electron wavelengths are short enough (and experimental
 techniques precise enough) to resolve phase shifts of order
 $2\pi$.
+
+The dial below shows the flux in units of $\Phi_0$ as an angle.
+Drag the needle or use the slider, and watch the mini interference
+pattern at the bottom shift and return. At every integer marking
+(amber ticks), the pattern snaps back to its original shape.
+The AB effect is periodic: physically distinguishable states
+repeat every $\Phi_0$.
+
+<FluxQuantizationDial />
 
 ## Why This Matters
 
