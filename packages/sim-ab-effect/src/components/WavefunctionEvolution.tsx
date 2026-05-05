@@ -155,7 +155,7 @@ function buildBarrierPotential(n: number): Float64Array {
       const edgeDist = Math.min(x, y, n - 1 - x, n - 1 - y);
       if (edgeDist < 15) {
         const ramp = (15 - edgeDist) / 15;
-        V[y * n + x] += 5 * ramp * ramp;
+        V[y * n + x] = (V[y * n + x] ?? 0) + 5 * ramp * ramp;
       }
     }
   }
