@@ -14,6 +14,7 @@
   "dependencies": {
     "@macrokroma/shared": "workspace:*",
     "@macrokroma/sim-ab-effect": "workspace:*",
+    "@macrokroma/sim-lunar-phases": "workspace:*",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^9.6.0",
     "katex": "^0.16.45",

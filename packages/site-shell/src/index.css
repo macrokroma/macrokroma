@@ -2,6 +2,11 @@
 @import "tailwindcss";
 @source "../../shared/src/**/*.{ts,tsx}";
 @source "../../sim-ab-effect/src/**/*.{ts,tsx,mdx}";
+@import "tailwindcss";
+@source "../../shared/src/**/*.{ts,tsx}";
+@source "../../sim-ab-effect/src/**/*.{ts,tsx}";
+@source "../../sim-lunar-phases/src/**/*.{ts,tsx}";
+
 /*
  * CSS custom properties for theming.
  * All simulation suites and the site shell share these tokens.
