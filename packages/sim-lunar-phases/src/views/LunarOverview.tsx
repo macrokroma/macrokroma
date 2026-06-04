@@ -1,6 +1,7 @@
 import { useLunarStore } from "../store/lunarStore";
 import { jdToDate } from "../compute/ephemeris/julianDate";
 import { useEffect, useRef } from "react";
+import { OrbitalViewport } from "../components/OrbitalViewport";
 
 /**
  * LunarOverview — landing page for the Sun/Earth/Moon suite.
@@ -49,6 +50,9 @@ export function LunarOverview() {
           and how they appear from any point on Earth.
         </p>
       </div>
+
+      {/* 3D Orbital Viewport */}
+      <OrbitalViewport className="h-[500px]" />
 
       {/* Time controls */}
       <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 space-y-3">
