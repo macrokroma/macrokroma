@@ -5,42 +5,25 @@
  * with a DirectionalLight from the Sun so the Moon's illuminated hemisphere
  * is correct from the geometry itself.
  *
- * Scale modes:
- *   "exaggerated" — bodies inflated, distances compressed, everything visible
- *   "realistic"   — true proportions (Moon is a speck 60 Earth-radii away)
- *
- * The scene reads positions from the Zustand store each frame via useFrame,
- * which runs outside React reconciliation for smooth 60fps updates.
+ * Uses only basic Three.js primitives (no drei Line/Text) to ensure
+ * WebGPU renderer compatibility.
  */
 
-import { useRef, useMemo } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import { OrbitControls, Line } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { useLunarStore } from "../store/lunarStore";
 import { DEG2RAD } from "../compute/constants";
 
 // ─── Scale constants ────────────────────────────────────────────
-// In "exaggerated" mode we map real km to scene units with these factors.
-// The goal: Moon orbits at ~20 units from Earth, Earth radius = 1 unit.
-
-const EARTH_RADIUS_UNIT = 1;
-const MOON_RADIUS_RATIO = 0.273; // real ratio Moon/Earth radius
 
 const EXAGGERATED = {
-  earthRadius: EARTH_RADIUS_UNIT,
-  moonRadius: EARTH_RADIUS_UNIT * MOON_RADIUS_RATIO,
-  moonDistScale: 20 / 384400,  // maps 384400 km → 20 units
-  sunDistance: 80,              // Sun indicator placed at fixed distance
-  sunRadius: 3,                // visual indicator size (not to scale)
-};
-
-const REALISTIC = {
-  earthRadius: EARTH_RADIUS_UNIT,
-  moonRadius: EARTH_RADIUS_UNIT * MOON_RADIUS_RATIO,
-  moonDistScale: 1 / 6371,    // 1 unit = 1 Earth radius = 6371 km
-  sunDistance: 149597870.7 / 6371, // ~23,481 units (very far)
-  sunRadius: 695700 / 6371,   // ~109 units
+  earthRadius: 1,
+  moonRadius: 0.273,
+  moonDistScale: 20 / 384400,     // maps 384400 km → 20 units
+  sunDistance: 80,
+  sunRadius: 3,
 };
 
 /**
@@ -52,88 +35,80 @@ export function OrbitalSceneContent() {
   const sunLightRef = useRef<THREE.DirectionalLight>(null);
   const sunIndicatorRef = useRef<THREE.Mesh>(null);
 
-  // Subscribe to store — useFrame reads directly for performance
+  // Subscribe to store with proper cleanup
   const storeRef = useRef(useLunarStore.getState());
-  useLunarStore.subscribe((state) => { storeRef.current = state; });
+  useEffect(() => {
+    const unsub = useLunarStore.subscribe((state) => {
+      storeRef.current = state;
+    });
+    return unsub;
+  }, []);
 
-  // Generate orbit path points (circle approximation for visual reference)
-  const orbitPoints = useMemo(() => {
-    const points: [number, number, number][] = [];
+  // Generate orbit ring as a Three.js Line object (avoids JSX <line> vs SVG conflict)
+  const orbitLine = useMemo(() => {
     const segments = 128;
+    const r = 384400 * EXAGGERATED.moonDistScale;
+    const points: THREE.Vector3[] = [];
     for (let i = 0; i <= segments; i++) {
       const angle = (i / segments) * Math.PI * 2;
-      // Orbit radius in exaggerated units (mean distance)
-      const r = 384400 * EXAGGERATED.moonDistScale;
-      points.push([
+      points.push(new THREE.Vector3(
         Math.cos(angle) * r,
         0,
         Math.sin(angle) * r,
-      ]);
+      ));
     }
-    return points;
+    const geo = new THREE.BufferGeometry().setFromPoints(points);
+    const mat = new THREE.LineBasicMaterial({ color: "#ffffff", opacity: 0.15, transparent: true });
+    const line = new THREE.LineLoop(geo, mat);
+    line.rotation.x = 5.145 * DEG2RAD;
+    return line;
   }, []);
 
   useFrame(() => {
     const store = storeRef.current;
+    const { snapshot } = store;
+    const scale = EXAGGERATED;
 
-    const { snapshot, scaleMode } = store;
-    const scale = scaleMode === "exaggerated" ? EXAGGERATED : REALISTIC;
-
-    // Moon position: convert ecliptic Cartesian (km) to scene units
-    // The ephemeris gives x,y,z in ecliptic frame with Earth at origin.
-    // In Three.js: x = right, y = up, z = toward camera.
-    // Ecliptic frame: x,y are in the ecliptic plane, z is perpendicular.
-    // Map: ecliptic x → scene x, ecliptic y → scene z, ecliptic z → scene y
-    const moonCart = snapshot.moon.cartesian;
-    const moonX = moonCart.x * scale.moonDistScale;
-    const moonY = moonCart.z * scale.moonDistScale; // ecliptic z → up
-    const moonZ = moonCart.y * scale.moonDistScale; // ecliptic y → into screen
-
+    // ── Moon position ──
+    // Ecliptic frame: x,y in ecliptic plane, z perpendicular
+    // Three.js frame: x right, y up, z toward camera
+    // Map: ecliptic x → Three x, ecliptic z → Three y, ecliptic y → Three z
+    const mc = snapshot.moon.cartesian;
     if (moonRef.current) {
-      moonRef.current.position.set(moonX, moonY, moonZ);
-      moonRef.current.scale.setScalar(scale.moonRadius);
+      moonRef.current.position.set(
+        mc.x * scale.moonDistScale,
+        mc.z * scale.moonDistScale,
+        mc.y * scale.moonDistScale,
+      );
     }
 
-    // Sun direction: normalize the Sun's Cartesian position for the light
-    const sunCart = snapshot.sun.cartesian;
-    const sunDist = Math.sqrt(sunCart.x ** 2 + sunCart.y ** 2 + sunCart.z ** 2);
-    const sunDirX = sunCart.x / sunDist;
-    const sunDirY = sunCart.z / sunDist; // ecliptic z → up
-    const sunDirZ = sunCart.y / sunDist;
+    // ── Sun direction (for lighting) ──
+    const sc = snapshot.sun.cartesian;
+    const sd = Math.sqrt(sc.x ** 2 + sc.y ** 2 + sc.z ** 2);
+    const sunDir = { x: sc.x / sd, y: sc.z / sd, z: sc.y / sd };
 
     if (sunLightRef.current) {
-      // Place the directional light far away in the Sun's direction
       sunLightRef.current.position.set(
-        sunDirX * 100,
-        sunDirY * 100,
-        sunDirZ * 100,
+        sunDir.x * 100,
+        sunDir.y * 100,
+        sunDir.z * 100,
       );
-      sunLightRef.current.target.position.set(0, 0, 0);
-      sunLightRef.current.target.updateMatrixWorld();
     }
 
-    // Sun indicator sphere (visual marker, not to scale)
+    // ── Sun indicator ──
     if (sunIndicatorRef.current) {
-      if (scaleMode === "exaggerated") {
-        sunIndicatorRef.current.position.set(
-          sunDirX * scale.sunDistance,
-          sunDirY * scale.sunDistance,
-          sunDirZ * scale.sunDistance,
-        );
-        sunIndicatorRef.current.visible = true;
-      } else {
-        sunIndicatorRef.current.visible = false; // too far in realistic mode
-      }
+      sunIndicatorRef.current.position.set(
+        sunDir.x * scale.sunDistance,
+        sunDir.y * scale.sunDistance,
+        sunDir.z * scale.sunDistance,
+      );
     }
 
-    // Earth rotation (sidereal day)
+    // ── Earth rotation ──
     if (earthRef.current) {
-      // Rotate around y-axis by GMST (Greenwich sidereal time)
       earthRef.current.rotation.y = snapshot.gmst * DEG2RAD;
     }
   });
-
-  const store = useLunarStore();
 
   return (
     <>
@@ -145,13 +120,13 @@ export function OrbitalSceneContent() {
         maxDistance={200}
       />
 
-      {/* Lighting */}
-      <ambientLight intensity={0.08} />
+      {/* Lighting — initial position pointing from +x so Earth is lit on first frame */}
+      <ambientLight intensity={0.15} />
       <directionalLight
         ref={sunLightRef}
         intensity={2.5}
         color="#fff5e0"
-        castShadow={false}
+        position={[100, 10, 0]}
       />
 
       {/* Earth */}
@@ -164,21 +139,8 @@ export function OrbitalSceneContent() {
         />
       </mesh>
 
-      {/* Earth's axis indicator (thin line) */}
-      {store.showAxialTilt && (
-        <group rotation={[0, 0, 23.44 * DEG2RAD]}>
-          <Line
-            points={[[0, -1.8, 0], [0, 1.8, 0]]}
-            color="#ffffff"
-            lineWidth={1}
-            opacity={0.3}
-            transparent
-          />
-        </group>
-      )}
-
       {/* Moon */}
-      <mesh ref={moonRef}>
+      <mesh ref={moonRef} scale={EXAGGERATED.moonRadius}>
         <sphereGeometry args={[1, 24, 24]} />
         <meshStandardMaterial
           color="#ccccbb"
@@ -187,39 +149,14 @@ export function OrbitalSceneContent() {
         />
       </mesh>
 
-      {/* Sun indicator (in exaggerated mode only) */}
+      {/* Sun indicator */}
       <mesh ref={sunIndicatorRef}>
         <sphereGeometry args={[EXAGGERATED.sunRadius, 16, 16]} />
         <meshBasicMaterial color="#ffdd44" />
       </mesh>
 
-      {/* Moon orbit path */}
-      {store.showOrbits && (
-        <group rotation={[5.145 * DEG2RAD, 0, 0]}>
-          <Line
-            points={orbitPoints}
-            color="#ffffff"
-            lineWidth={0.5}
-            opacity={0.15}
-            transparent
-          />
-        </group>
-      )}
-
-      {/* Ecliptic plane reference (subtle grid) */}
-      {store.showEclipticPlane && (
-        <gridHelper
-          args={[60, 20, "#334455", "#223344"]}
-          position={[0, 0, 0]}
-        />
-      )}
-
-      {/* Labels */}
-      {store.showLabels && (
-        <>
-          {/* We'll add drei Text labels in a follow-up */}
-        </>
-      )}
+      {/* Moon orbit ring */}
+      <primitive object={orbitLine} />
     </>
   );
 }
