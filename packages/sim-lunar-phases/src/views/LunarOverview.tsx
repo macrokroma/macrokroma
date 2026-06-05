@@ -1,43 +1,54 @@
 import { useLunarStore } from "../store/lunarStore";
 import { jdToDate } from "../compute/ephemeris/julianDate";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OrbitalViewport } from "../components/OrbitalViewport";
 
 /**
  * LunarOverview — landing page for the Sun/Earth/Moon suite.
  *
- * Shows the current state of the ephemeris engine as a live dashboard:
- * the Moon's phase, position, illumination, and eclipse proximity.
- * This serves as both a proof-of-life for the computation engine
- * and a useful at-a-glance summary.
+ * Animation loop is throttled to ~20fps to keep the UI responsive
+ * for toolbar toggles and button clicks during playback. The 3D scene
+ * reads positions from the store via refs, so it stays smooth.
  */
 export function LunarOverview() {
-  const {
-    jd, playing, playSpeed, snapshot, observerView,
-    togglePlay, setPlaySpeed, goToNow, stepDays, tick,
-  } = useLunarStore();
+  // Dashboard display values — updated at throttled rate
+  const [displayJD, setDisplayJD] = useState(useLunarStore.getState().jd);
 
-  // Animation loop
-  const lastTimeRef = useRef<number | null>(null);
+  const playing = useLunarStore((s) => s.playing);
+  const playSpeed = useLunarStore((s) => s.playSpeed);
+  const togglePlay = useLunarStore((s) => s.togglePlay);
+  const setPlaySpeed = useLunarStore((s) => s.setPlaySpeed);
+  const goToNow = useLunarStore((s) => s.goToNow);
+  const stepDays = useLunarStore((s) => s.stepDays);
+  const tick = useLunarStore((s) => s.tick);
+
+  // Throttled animation loop (~20fps for store updates)
   useEffect(() => {
-    if (!playing) {
-      lastTimeRef.current = null;
-      return;
-    }
-    let rafId: number;
-    const loop = (time: number) => {
-      if (lastTimeRef.current !== null) {
-        const delta = (time - lastTimeRef.current) / 1000;
-        tick(delta);
-      }
-      lastTimeRef.current = time;
-      rafId = requestAnimationFrame(loop);
-    };
-    rafId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafId);
+    if (!playing) return;
+
+    const TICK_INTERVAL = 50; // ms (~20fps)
+    const interval = setInterval(() => {
+      tick(TICK_INTERVAL / 1000);
+      setDisplayJD(useLunarStore.getState().jd);
+    }, TICK_INTERVAL);
+
+    return () => clearInterval(interval);
   }, [playing, tick]);
 
-  const date = jdToDate(jd);
+  // Sync display when not playing (manual steps, goToNow, etc.)
+  useEffect(() => {
+    if (playing) return;
+    const unsub = useLunarStore.subscribe((s) => setDisplayJD(s.jd));
+    return unsub;
+  }, [playing]);
+
+  // Read snapshot from the store for dashboard display
+  const snapshot = useLunarStore((s) => s.snapshot);
+  const observerView = useLunarStore((s) => s.observerView);
+  const observerLat = useLunarStore((s) => s.observerLat);
+  const observerLon = useLunarStore((s) => s.observerLon);
+
+  const date = jdToDate(displayJD);
   const { phase, eclipseProximity, moon, sun } = snapshot;
 
   return (
@@ -59,7 +70,7 @@ export function LunarOverview() {
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">Simulation Time</span>
           <span className="text-xs text-[var(--color-text-secondary)] font-mono">
-            JD {jd.toFixed(4)}
+            JD {displayJD.toFixed(4)}
           </span>
         </div>
 
@@ -141,7 +152,6 @@ export function LunarOverview() {
 
       {/* Ephemeris dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Moon phase card */}
         <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
           <h3 className="text-sm font-medium mb-3">Moon Phase</h3>
           <div className="text-3xl font-semibold mb-1">{phase.name}</div>
@@ -154,7 +164,6 @@ export function LunarOverview() {
           </div>
         </div>
 
-        {/* Moon position card */}
         <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
           <h3 className="text-sm font-medium mb-3">Moon Position</h3>
           <div className="space-y-1 text-sm text-[var(--color-text-secondary)]">
@@ -167,7 +176,6 @@ export function LunarOverview() {
           </div>
         </div>
 
-        {/* Sun position card */}
         <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
           <h3 className="text-sm font-medium mb-3">Sun Position</h3>
           <div className="space-y-1 text-sm text-[var(--color-text-secondary)]">
@@ -179,7 +187,6 @@ export function LunarOverview() {
           </div>
         </div>
 
-        {/* Eclipse proximity card */}
         <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
           <h3 className="text-sm font-medium mb-3">Eclipse Proximity</h3>
           <div className="space-y-1 text-sm text-[var(--color-text-secondary)]">
@@ -194,10 +201,9 @@ export function LunarOverview() {
           </div>
         </div>
 
-        {/* Observer view card */}
         <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 md:col-span-2">
           <h3 className="text-sm font-medium mb-3">
-            Observer View ({useLunarStore.getState().observerLat.toFixed(2)}°N, {Math.abs(useLunarStore.getState().observerLon).toFixed(2)}°W)
+            Observer View ({observerLat.toFixed(2)}°N, {Math.abs(observerLon).toFixed(2)}°W)
           </h3>
           <div className="grid grid-cols-2 gap-4 text-sm text-[var(--color-text-secondary)]">
             <div>
